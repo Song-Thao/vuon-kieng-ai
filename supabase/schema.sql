@@ -52,3 +52,28 @@ CREATE POLICY "Plants viewable by all" ON plants FOR SELECT USING (true);
 CREATE POLICY "User plants owner" ON user_plants FOR ALL USING (auth.uid() = user_id);
 CREATE POLICY "Diagnoses owner" ON diagnoses FOR ALL USING (auth.uid() = user_id);
 CREATE POLICY "Affiliate viewable by all" ON affiliate_products FOR SELECT USING (true);
+
+-- Bảng hộ chiếu cây
+CREATE TABLE IF NOT EXISTS passports (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  ten_cay VARCHAR(255) NOT NULL,
+  ten_khoa_hoc VARCHAR(255),
+  tuoi_cay VARCHAR(100),
+  the_cay VARCHAR(255),
+  hoành_goc VARCHAR(100),
+  chieu_cao VARCHAR(100),
+  xuat_xu VARCHAR(255),
+  vi_tri VARCHAR(255),
+  ngay_so_huu DATE,
+  ghi_chu TEXT,
+  hinh_anh TEXT,
+  gia_tri_uoc_tinh BIGINT,
+  trang_thai VARCHAR(50) DEFAULT 'khoe_manh',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE passports ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Passport owner" ON passports FOR ALL USING (auth.uid() = user_id);
+CREATE POLICY "Passport public read" ON passports FOR SELECT USING (true);
