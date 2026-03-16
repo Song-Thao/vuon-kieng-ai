@@ -8,7 +8,7 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
-const ADMIN_EMAIL = 'thelittlebrick00@gmail.com'
+const ADMIN_EMAIL = 'khsongthao00@gmail.com'
 
 export default function Admin() {
   const [user, setUser] = useState<any>(null)
