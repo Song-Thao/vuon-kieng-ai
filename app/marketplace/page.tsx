@@ -13,6 +13,78 @@ function getYoutubeEmbed(url: string) {
   return yt ? `https://www.youtube.com/embed/${yt[1]}` : null
 }
 
+function ListingModal({ item, onClose }: { item: any, onClose: () => void }) {
+  const [activeImg, setActiveImg] = useState(0)
+  const imgs = [item.hinh_anh, item.hinh_anh_2, item.hinh_anh_3, item.hinh_anh_4, item.hinh_anh_5].filter(Boolean)
+  const videos = [item.video_url, item.video_url_2, item.video_url_3].filter(Boolean)
+
+  return (
+    <div className="min-h-screen bg-gray-900 text-white p-4 max-w-2xl mx-auto">
+      <button onClick={onClose} className="text-gray-400 hover:text-white mb-4 flex items-center gap-2">
+        ← Quay lại chợ
+      </button>
+
+      {/* Gallery ảnh */}
+      {imgs.length > 0 && (
+        <div className="mb-4">
+          <img src={imgs[activeImg]} className="w-full h-72 object-cover rounded-xl mb-2" />
+          {imgs.length > 1 && (
+            <div className="flex gap-2 overflow-x-auto">
+              {imgs.map((img, i) => (
+                <img key={i} src={img} onClick={() => setActiveImg(i)}
+                  className={`w-16 h-16 shrink-0 object-cover rounded-lg cursor-pointer transition ${activeImg === i ? 'ring-2 ring-green-400' : 'opacity-60 hover:opacity-100'}`} />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      <div className="bg-gray-800 rounded-xl p-4 mb-4">
+        <h1 className="text-xl font-bold text-green-300 mb-2">{item.ten_cay}</h1>
+        <div className="text-2xl font-bold text-yellow-400 mb-3">{Number(item.gia).toLocaleString('vi-VN')}đ</div>
+        {item.vi_tri && <p className="text-gray-400 text-sm mb-3">📍 {item.vi_tri}</p>}
+        {item.mo_ta && <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-line">{item.mo_ta}</p>}
+      </div>
+
+      {/* Videos */}
+      {videos.length > 0 && (
+        <div className="mb-4">
+          <h3 className="text-sm text-gray-400 mb-2">🎥 Video</h3>
+          {videos.map((url, i) => {
+            const ytEmbed = getYoutubeEmbed(url)
+            return ytEmbed ? (
+              <div key={i} className="mb-3 rounded-xl overflow-hidden">
+                <iframe className="w-full aspect-video" src={ytEmbed} allowFullScreen />
+              </div>
+            ) : (
+              <a key={i} href={url} target="_blank"
+                className="block bg-gray-800 hover:bg-gray-700 rounded-xl p-3 mb-2 text-blue-400 text-sm truncate">
+                🎥 {url}
+              </a>
+            )
+          })}
+        </div>
+      )}
+
+      {/* Liên hệ */}
+      <div className="flex gap-3">
+        {item.zalo && (
+          <a href={`https://zalo.me/${item.zalo}`} target="_blank"
+            className="flex-1 bg-blue-600 hover:bg-blue-500 rounded-xl p-3 text-center font-semibold">
+            💬 Zalo
+          </a>
+        )}
+        {item.sdt && (
+          <a href={`tel:${item.sdt}`}
+            className="flex-1 bg-green-700 hover:bg-green-600 rounded-xl p-3 text-center font-semibold">
+            📞 Gọi ngay
+          </a>
+        )}
+      </div>
+    </div>
+  )
+}
+
 export default function Marketplace() {
   const [listings, setListings] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -33,69 +105,7 @@ export default function Marketplace() {
     l.vi_tri?.toLowerCase().includes(search.toLowerCase())
   )
 
-  // Modal chi tiết
-  if (selected) return (
-    <div className="min-h-screen bg-gray-900 text-white p-4 max-w-2xl mx-auto">
-      <button onClick={() => setSelected(null)} className="text-gray-400 hover:text-white mb-4">← Quay lại</button>
-
-      {/* Gallery ảnh */}
-      {(() => {
-        const imgs = [selected.hinh_anh, selected.hinh_anh_2, selected.hinh_anh_3, selected.hinh_anh_4, selected.hinh_anh_5].filter(Boolean)
-        const [activeImg, setActiveImg] = useState(0)
-        return imgs.length > 0 ? (
-          <div className="mb-4">
-            <img src={imgs[activeImg]} className="w-full h-72 object-cover rounded-xl mb-2" />
-            {imgs.length > 1 && (
-              <div className="flex gap-2">
-                {imgs.map((img, i) => (
-                  <img key={i} src={img} onClick={() => setActiveImg(i)}
-                    className={`w-16 h-16 object-cover rounded-lg cursor-pointer ${activeImg === i ? 'ring-2 ring-green-400' : 'opacity-60'}`} />
-                ))}
-              </div>
-            )}
-          </div>
-        ) : null
-      })()}
-
-      <div className="bg-gray-800 rounded-xl p-4 mb-4">
-        <h1 className="text-xl font-bold text-green-300 mb-2">{selected.ten_cay}</h1>
-        <div className="text-2xl font-bold text-yellow-400 mb-3">{Number(selected.gia).toLocaleString('vi-VN')}đ</div>
-        {selected.vi_tri && <p className="text-gray-400 text-sm mb-2">📍 {selected.vi_tri}</p>}
-        {selected.mo_ta && <p className="text-gray-300 text-sm leading-relaxed">{selected.mo_ta}</p>}
-      </div>
-
-      {/* Video */}
-      {[selected.video_url, selected.video_url_2, selected.video_url_3].filter(Boolean).map((url, i) => {
-        const ytEmbed = getYoutubeEmbed(url)
-        return ytEmbed ? (
-          <div key={i} className="mb-3 rounded-xl overflow-hidden">
-            <iframe className="w-full aspect-video" src={ytEmbed} allowFullScreen />
-          </div>
-        ) : (
-          <a key={i} href={url} target="_blank"
-            className="block bg-gray-800 hover:bg-gray-700 rounded-xl p-3 mb-2 text-blue-400 text-sm truncate">
-            🎥 {url}
-          </a>
-        )
-      })}
-
-      {/* Liên hệ */}
-      <div className="flex gap-3 mt-4">
-        {selected.zalo && (
-          <a href={`https://zalo.me/${selected.zalo}`} target="_blank"
-            className="flex-1 bg-blue-600 hover:bg-blue-500 rounded-xl p-3 text-center font-semibold">
-            💬 Zalo
-          </a>
-        )}
-        {selected.sdt && (
-          <a href={`tel:${selected.sdt}`}
-            className="flex-1 bg-green-700 hover:bg-green-600 rounded-xl p-3 text-center font-semibold">
-            📞 Gọi ngay
-          </a>
-        )}
-      </div>
-    </div>
-  )
+  if (selected) return <ListingModal item={selected} onClose={() => setSelected(null)} />
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4 max-w-4xl mx-auto">
