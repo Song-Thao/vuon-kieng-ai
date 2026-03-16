@@ -149,7 +149,7 @@ export default function Dashboard() {
                 return (
                   <Link key={i} href="/passport" style={{ border: '1px solid var(--border)', borderRadius: '12px', padding: '16px', textDecoration: 'none', display: 'block', position: 'relative' }}>
                     {/* Visibility icon */}
-                    <div style={{ position: 'absolute', top: '10px', right: '10px', fontSize: '14px', title: vis.label }}>{vis.icon}</div>
+                    <div style={{ position: "absolute", top: "10px", right: "10px", fontSize: "14px" }}>{vis.icon}</div>
                     {p.hinh_anh ? (
                       <img src={p.hinh_anh} style={{ width: '100%', height: '80px', objectFit: 'cover', borderRadius: '8px', marginBottom: '8px' }} />
                     ) : (
