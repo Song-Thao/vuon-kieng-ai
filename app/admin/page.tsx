@@ -8,15 +8,21 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
-// Email admin - thelittlebrick00@gmail.com
-const ADMIN_EMAIL = 'your@email.com'
+const ADMIN_EMAIL = 'your@gmail.com' // ← sửa thành email của bạn
 
 export default function Admin() {
   const [user, setUser] = useState<any>(null)
   const [posts, setPosts] = useState<any[]>([])
   const [listings, setListings] = useState<any[]>([])
-  const [tab, setTab] = useState<'posts'|'listings'>('posts')
+  const [tab, setTab] = useState<'posts'|'listings'|'settings'>('settings')
   const [loading, setLoading] = useState(true)
+  const [settings, setSettings] = useState<any>({
+    banner_title: '', banner_content: '', banner_image: '', banner_link: '',
+    bank_name: '', bank_account: '', bank_holder: '', momo_number: '',
+    listing_fee: '0', commission_percent: '0'
+  })
+  const [saving, setSaving] = useState(false)
+  const [saveMsg, setSaveMsg] = useState('')
 
   useEffect(() => { checkAdmin() }, [])
 
@@ -28,6 +34,7 @@ export default function Admin() {
     }
     setUser(user)
     fetchData()
+    fetchSettings()
   }
 
   const fetchData = async () => {
@@ -36,6 +43,27 @@ export default function Admin() {
     setPosts(p || [])
     setListings(l || [])
     setLoading(false)
+  }
+
+  const fetchSettings = async () => {
+    const { data } = await supabase.from('admin_settings').select('*')
+    if (data) {
+      const s: any = {}
+      data.forEach((r: any) => s[r.key] = r.value || '')
+      setSettings((prev: any) => ({ ...prev, ...s }))
+    }
+  }
+
+  const saveSetting = async (key: string, value: string) => {
+    await supabase.from('admin_settings').upsert({ key, value, updated_at: new Date().toISOString() }, { onConflict: 'key' })
+  }
+
+  const saveAllSettings = async () => {
+    setSaving(true)
+    await Promise.all(Object.entries(settings).map(([k, v]) => saveSetting(k, v as string)))
+    setSaving(false)
+    setSaveMsg('✅ Đã lưu!')
+    setTimeout(() => setSaveMsg(''), 3000)
   }
 
   const duyetBai = async (id: string) => {
@@ -55,7 +83,7 @@ export default function Admin() {
   }
 
   const xoaListing = async (id: string) => {
-    if (!confirm('Xóa tin đăng này?')) return
+    if (!confirm('Xóa tin này?')) return
     await supabase.from('listings').delete().eq('id', id)
     fetchData()
   }
@@ -63,7 +91,6 @@ export default function Admin() {
   if (loading) return <div className="min-h-screen flex items-center justify-center">Đang tải...</div>
 
   const choDuyet = posts.filter(p => p.trang_thai === 'cho_duyet')
-  const daDuyet = posts.filter(p => p.trang_thai === 'da_duyet')
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
@@ -77,9 +104,9 @@ export default function Admin() {
         <div className="grid grid-cols-4 gap-4 mb-6">
           {[
             { label: 'Chờ duyệt', value: choDuyet.length, color: 'bg-yellow-50 text-yellow-700' },
-            { label: 'Đã duyệt', value: daDuyet.length, color: 'bg-green-50 text-green-700' },
+            { label: 'Tổng bài', value: posts.length, color: 'bg-green-50 text-green-700' },
             { label: 'Tin đăng bán', value: listings.length, color: 'bg-blue-50 text-blue-700' },
-            { label: 'Tổng bài', value: posts.length, color: 'bg-purple-50 text-purple-700' },
+            { label: 'Tổng users', value: '—', color: 'bg-purple-50 text-purple-700' },
           ].map(s => (
             <div key={s.label} className={`${s.color} rounded-xl p-4 text-center`}>
               <div className="text-2xl font-bold">{s.value}</div>
@@ -89,17 +116,101 @@ export default function Admin() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-4">
-          <button onClick={() => setTab('posts')}
-            className={`px-4 py-2 rounded-xl font-medium ${tab === 'posts' ? 'bg-green-700 text-white' : 'bg-white text-gray-600'}`}>
-            📝 Bài viết {choDuyet.length > 0 && <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full ml-1">{choDuyet.length}</span>}
-          </button>
-          <button onClick={() => setTab('listings')}
-            className={`px-4 py-2 rounded-xl font-medium ${tab === 'listings' ? 'bg-green-700 text-white' : 'bg-white text-gray-600'}`}>
-            🌿 Tin đăng bán
-          </button>
+        <div className="flex gap-2 mb-6">
+          {[
+            { key: 'settings', label: '⚙️ Cài đặt' },
+            { key: 'posts', label: `📝 Bài viết ${choDuyet.length > 0 ? `(${choDuyet.length})` : ''}` },
+            { key: 'listings', label: '🌿 Tin đăng bán' },
+          ].map(t => (
+            <button key={t.key} onClick={() => setTab(t.key as any)}
+              className={`px-4 py-2 rounded-xl font-medium text-sm ${tab === t.key ? 'bg-green-700 text-white' : 'bg-white text-gray-600 border'}`}>
+              {t.label}
+            </button>
+          ))}
         </div>
 
+        {/* Settings Tab */}
+        {tab === 'settings' && (
+          <div className="space-y-6">
+
+            {/* Banner */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm">
+              <h3 className="font-bold text-gray-800 mb-4">🖼️ Banner Dashboard</h3>
+              <div className="space-y-3">
+                {[
+                  { key: 'banner_title', label: 'Tiêu đề banner', ph: 'VD: 🌸 Hội thi cây cảnh Cà Mau 2026' },
+                  { key: 'banner_content', label: 'Nội dung', ph: 'Mô tả ngắn về sự kiện hoặc sản phẩm...' },
+                  { key: 'banner_image', label: 'Link ảnh banner', ph: 'https://...' },
+                  { key: 'banner_link', label: 'Link khi bấm', ph: 'https://...' },
+                ].map(f => (
+                  <div key={f.key}>
+                    <label className="text-sm text-gray-500">{f.label}</label>
+                    <input className="w-full border rounded-lg p-2 mt-1 text-sm"
+                      placeholder={f.ph}
+                      value={settings[f.key] || ''}
+                      onChange={e => setSettings({ ...settings, [f.key]: e.target.value })} />
+                  </div>
+                ))}
+                {settings.banner_title && (
+                  <div className="bg-green-900 rounded-xl p-4 mt-2">
+                    <div className="text-white font-bold">{settings.banner_title}</div>
+                    <div className="text-green-200 text-sm mt-1">{settings.banner_content}</div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Thanh toán */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm">
+              <h3 className="font-bold text-gray-800 mb-4">💳 Cài đặt thanh toán</h3>
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { key: 'bank_name',    label: 'Tên ngân hàng', ph: 'Vietcombank' },
+                  { key: 'bank_account', label: 'Số tài khoản',  ph: '1234567890' },
+                  { key: 'bank_holder',  label: 'Chủ tài khoản', ph: 'NGUYEN VAN A' },
+                  { key: 'momo_number',  label: 'Số MoMo',       ph: '0917161003' },
+                ].map(f => (
+                  <div key={f.key}>
+                    <label className="text-sm text-gray-500">{f.label}</label>
+                    <input className="w-full border rounded-lg p-2 mt-1 text-sm"
+                      placeholder={f.ph}
+                      value={settings[f.key] || ''}
+                      onChange={e => setSettings({ ...settings, [f.key]: e.target.value })} />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Phí */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm">
+              <h3 className="font-bold text-gray-800 mb-4">💰 Phí & Hoa hồng</h3>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-sm text-gray-500">Phí đăng tin (VNĐ, 0 = miễn phí)</label>
+                  <input type="number" className="w-full border rounded-lg p-2 mt-1 text-sm"
+                    value={settings.listing_fee || '0'}
+                    onChange={e => setSettings({ ...settings, listing_fee: e.target.value })} />
+                </div>
+                <div>
+                  <label className="text-sm text-gray-500">Hoa hồng giao dịch (%)</label>
+                  <input type="number" className="w-full border rounded-lg p-2 mt-1 text-sm"
+                    value={settings.commission_percent || '0'}
+                    onChange={e => setSettings({ ...settings, commission_percent: e.target.value })} />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <button onClick={saveAllSettings} disabled={saving}
+                className="bg-green-700 hover:bg-green-600 disabled:bg-gray-400 text-white rounded-xl px-8 py-3 font-semibold">
+                {saving ? 'Đang lưu...' : '💾 Lưu tất cả'}
+              </button>
+              {saveMsg && <span className="text-green-600 font-medium">{saveMsg}</span>}
+            </div>
+          </div>
+        )}
+
+        {/* Posts Tab */}
         {tab === 'posts' && (
           <div className="space-y-3">
             {posts.map(post => (
@@ -107,42 +218,21 @@ export default function Admin() {
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className={`text-xs px-2 py-1 rounded-full ${
-                        post.trang_thai === 'da_duyet' ? 'bg-green-100 text-green-700' :
-                        post.trang_thai === 'cho_duyet' ? 'bg-yellow-100 text-yellow-700' :
-                        'bg-red-100 text-red-700'
-                      }`}>
-                        {post.trang_thai === 'da_duyet' ? '✅ Đã duyệt' :
-                         post.trang_thai === 'cho_duyet' ? '⏳ Chờ duyệt' : '❌ Từ chối'}
+                      <span className={`text-xs px-2 py-1 rounded-full ${post.trang_thai === 'da_duyet' ? 'bg-green-100 text-green-700' : post.trang_thai === 'cho_duyet' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}`}>
+                        {post.trang_thai === 'da_duyet' ? '✅ Đã duyệt' : post.trang_thai === 'cho_duyet' ? '⏳ Chờ duyệt' : '❌ Từ chối'}
                       </span>
                       <span className="text-xs text-gray-400">{post.the_loai}</span>
-                      {post.ai_viet && <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">🤖 AI</span>}
                     </div>
                     <h3 className="font-semibold text-gray-800">{post.tieu_de}</h3>
-                    {post.tom_tat && <p className="text-sm text-gray-500 mt-1 line-clamp-2">{post.tom_tat}</p>}
                     <p className="text-xs text-gray-400 mt-1">{new Date(post.created_at).toLocaleDateString('vi-VN')}</p>
                   </div>
-                  <div className="flex gap-2 ml-4">
-                    <Link href={`/blog/${post.slug || post.id}`} target="_blank"
-                      className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1.5 rounded-lg">
-                      👁️ Xem
-                    </Link>
-                    {post.trang_thai === 'cho_duyet' && (
-                      <>
-                        <button onClick={() => duyetBai(post.id)}
-                          className="text-xs bg-green-600 hover:bg-green-500 text-white px-3 py-1.5 rounded-lg">
-                          ✅ Duyệt
-                        </button>
-                        <button onClick={() => tuChoiBai(post.id)}
-                          className="text-xs bg-yellow-500 hover:bg-yellow-400 text-white px-3 py-1.5 rounded-lg">
-                          ❌ Từ chối
-                        </button>
-                      </>
-                    )}
-                    <button onClick={() => xoaBai(post.id)}
-                      className="text-xs bg-red-500 hover:bg-red-400 text-white px-3 py-1.5 rounded-lg">
-                      🗑️
-                    </button>
+                  <div className="flex gap-2 ml-4 flex-wrap">
+                    <Link href={`/blog/${post.slug || post.id}`} target="_blank" className="text-xs bg-gray-100 text-gray-600 px-3 py-1.5 rounded-lg">👁️ Xem</Link>
+                    {post.trang_thai === 'cho_duyet' && <>
+                      <button onClick={() => duyetBai(post.id)} className="text-xs bg-green-600 text-white px-3 py-1.5 rounded-lg">✅ Duyệt</button>
+                      <button onClick={() => tuChoiBai(post.id)} className="text-xs bg-yellow-500 text-white px-3 py-1.5 rounded-lg">❌ Từ chối</button>
+                    </>}
+                    <button onClick={() => xoaBai(post.id)} className="text-xs bg-red-500 text-white px-3 py-1.5 rounded-lg">🗑️</button>
                   </div>
                 </div>
               </div>
@@ -150,6 +240,7 @@ export default function Admin() {
           </div>
         )}
 
+        {/* Listings Tab */}
         {tab === 'listings' && (
           <div className="space-y-3">
             {listings.map(item => (
@@ -162,10 +253,7 @@ export default function Admin() {
                     <p className="text-xs text-gray-400">📍 {item.vi_tri} · {new Date(item.created_at).toLocaleDateString('vi-VN')}</p>
                   </div>
                 </div>
-                <button onClick={() => xoaListing(item.id)}
-                  className="text-xs bg-red-500 hover:bg-red-400 text-white px-3 py-1.5 rounded-lg">
-                  🗑️ Xóa
-                </button>
+                <button onClick={() => xoaListing(item.id)} className="text-xs bg-red-500 text-white px-3 py-1.5 rounded-lg">🗑️ Xóa</button>
               </div>
             ))}
           </div>
