@@ -9,17 +9,18 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
-export default function DangBan() {
-  const [loading, setLoading] = useState(false)
-  const [success, setSuccess] = useState(false)
-  const [image, setImage] = useState<string>('')
-  const [form, setForm] = useState({
-    ten_cay: '', mo_ta: '', gia: '', vi_tri: '', zalo: '', sdt: ''
-  })
+const IMG_SLOTS = [
+  { key: 'hinh_anh',   label: 'Ảnh chính', icon: '📸' },
+  { key: 'hinh_anh_2', label: 'Góc 2',     icon: '🔍' },
+  { key: 'hinh_anh_3', label: 'Gốc cây',   icon: '🌱' },
+  { key: 'hinh_anh_4', label: 'Ngọn / Lá', icon: '🍃' },
+  { key: 'hinh_anh_5', label: 'Toàn thân', icon: '🌳' },
+]
 
-  const handleImage = (e: any) => {
-    const file = e.target.files[0]
-    if (!file) return
+const emptyImages = { hinh_anh: '', hinh_anh_2: '', hinh_anh_3: '', hinh_anh_4: '', hinh_anh_5: '' }
+
+function resizeImage(file: File): Promise<string> {
+  return new Promise((resolve) => {
     const reader = new FileReader()
     reader.onload = (ev) => {
       const img = new Image()
@@ -31,24 +32,51 @@ export default function DangBan() {
         if (h > max) { w = w * max / h; h = max }
         canvas.width = w; canvas.height = h
         canvas.getContext('2d')!.drawImage(img, 0, 0, w, h)
-        setImage(canvas.toDataURL('image/jpeg', 0.7))
+        resolve(canvas.toDataURL('image/jpeg', 0.75))
       }
       img.src = ev.target?.result as string
     }
     reader.readAsDataURL(file)
+  })
+}
+
+function getVideoEmbed(url: string) {
+  if (!url) return null
+  // YouTube
+  const yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/)
+  if (yt) return `https://www.youtube.com/embed/${yt[1]}`
+  // TikTok - chỉ hiện link
+  if (url.includes('tiktok.com')) return url
+  // Facebook - chỉ hiện link
+  if (url.includes('facebook.com')) return url
+  return url
+}
+
+export default function DangBan() {
+  const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [images, setImages] = useState({ ...emptyImages })
+  const [uploadingSlot, setUploadingSlot] = useState<string>('')
+  const [form, setForm] = useState({
+    ten_cay: '', mo_ta: '', gia: '', vi_tri: '', zalo: '', sdt: '',
+    video_url: '', video_url_2: '', video_url_3: ''
+  })
+
+  const handleImageSlot = async (e: any, slot: string) => {
+    const file = e.target.files[0]
+    if (!file) return
+    setUploadingSlot(slot)
+    const b64 = await resizeImage(file)
+    const url = await uploadImage(b64, 'marketplace')
+    setImages(prev => ({ ...prev, [slot]: url || b64 }))
+    setUploadingSlot('')
   }
 
   const submit = async () => {
     if (!form.ten_cay || !form.gia) return alert('Vui lòng nhập tên cây và giá!')
     setLoading(true)
-
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { window.location.href = '/login'; return }
-
-    let imageUrl = null
-    if (image) {
-      imageUrl = await uploadImage(image, 'marketplace')
-    }
 
     const { error } = await supabase.from('listings').insert({
       ten_cay: form.ten_cay,
@@ -57,7 +85,14 @@ export default function DangBan() {
       vi_tri: form.vi_tri,
       zalo: form.zalo,
       sdt: form.sdt,
-      hinh_anh: imageUrl,
+      hinh_anh: images.hinh_anh || null,
+      hinh_anh_2: images.hinh_anh_2 || null,
+      hinh_anh_3: images.hinh_anh_3 || null,
+      hinh_anh_4: images.hinh_anh_4 || null,
+      hinh_anh_5: images.hinh_anh_5 || null,
+      video_url: form.video_url || null,
+      video_url_2: form.video_url_2 || null,
+      video_url_3: form.video_url_3 || null,
       user_id: user.id
     })
     setLoading(false)
@@ -73,7 +108,7 @@ export default function DangBan() {
         <p className="text-gray-400 mb-6">Cây của bạn đã được đăng lên chợ</p>
         <div className="flex gap-3 justify-center">
           <a href="/marketplace" className="bg-green-600 hover:bg-green-500 rounded-lg px-6 py-3">Xem chợ</a>
-          <button onClick={() => { setSuccess(false); setForm({ ten_cay:'',mo_ta:'',gia:'',vi_tri:'',zalo:'',sdt:'' }); setImage('') }}
+          <button onClick={() => { setSuccess(false); setForm({ ten_cay:'',mo_ta:'',gia:'',vi_tri:'',zalo:'',sdt:'',video_url:'',video_url_2:'',video_url_3:'' }); setImages({...emptyImages}) }}
             className="bg-gray-700 hover:bg-gray-600 rounded-lg px-6 py-3">Đăng tiếp</button>
         </div>
       </div>
@@ -88,39 +123,77 @@ export default function DangBan() {
       </div>
 
       <div className="bg-gray-800 rounded-xl p-4 space-y-4">
+
+        {/* 5 ảnh */}
+        <div>
+          <label className="text-sm text-gray-400 mb-2 block">📸 Ảnh cây — tối đa 5 ảnh</label>
+          <div className="grid grid-cols-5 gap-2">
+            {IMG_SLOTS.map(slot => (
+              <label key={slot.key} className="cursor-pointer">
+                <div className={`aspect-square rounded-lg border-2 border-dashed flex flex-col items-center justify-center text-xs overflow-hidden
+                  ${images[slot.key as keyof typeof images] ? 'border-green-500' : 'border-gray-600 hover:border-green-400'}`}>
+                  {uploadingSlot === slot.key ? (
+                    <div className="text-yellow-400 text-lg animate-pulse">⏳</div>
+                  ) : images[slot.key as keyof typeof images] ? (
+                    <img src={images[slot.key as keyof typeof images]} className="w-full h-full object-cover" />
+                  ) : (
+                    <>
+                      <span className="text-xl mb-1">{slot.icon}</span>
+                      <span className="text-gray-500 text-center px-1">{slot.label}</span>
+                    </>
+                  )}
+                </div>
+                <input type="file" accept="image/*" className="hidden"
+                  onChange={e => handleImageSlot(e, slot.key)} />
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Thông tin */}
         {[
-          { key: 'ten_cay', label: 'Tên cây *', ph: 'VD: Bonsai Mai Vàng 10 năm tuổi' },
-          { key: 'gia', label: 'Giá bán (VNĐ) *', ph: 'VD: 5000000' },
-          { key: 'vi_tri', label: 'Vị trí', ph: 'VD: Cà Mau, Cần Thơ, TP.HCM...' },
-          { key: 'zalo', label: 'Zalo', ph: 'Số Zalo của bạn' },
+          { key: 'ten_cay', label: 'Tên cây *', ph: 'VD: Bonsai Cây Sơ Ri 15 năm tuổi' },
+          { key: 'gia', label: 'Giá bán (VNĐ) *', ph: 'VD: 25000000' },
+          { key: 'vi_tri', label: 'Vị trí', ph: 'VD: Lung Chim, Đinh Thành, Cà Mau' },
+          { key: 'zalo', label: 'Zalo', ph: 'Số Zalo' },
           { key: 'sdt', label: 'Số điện thoại', ph: 'Số điện thoại liên hệ' },
         ].map(f => (
           <div key={f.key}>
             <label className="text-sm text-gray-400">{f.label}</label>
-            <input
-              className="w-full bg-gray-700 rounded p-2 mt-1 text-white placeholder-gray-500"
-              placeholder={f.ph}
-              value={(form as any)[f.key]}
-              onChange={e => setForm({...form, [f.key]: e.target.value})}
-            />
+            <input className="w-full bg-gray-700 rounded p-2 mt-1 text-white placeholder-gray-500"
+              placeholder={f.ph} value={(form as any)[f.key]}
+              onChange={e => setForm({...form, [f.key]: e.target.value})} />
           </div>
         ))}
 
         <div>
-          <label className="text-sm text-gray-400">Mô tả</label>
-          <textarea
-            className="w-full bg-gray-700 rounded p-2 mt-1 h-24 text-white placeholder-gray-500"
-            placeholder="Mô tả chi tiết: tuổi cây, thế cây, tình trạng sức khỏe, hoành gốc..."
-            value={form.mo_ta}
-            onChange={e => setForm({...form, mo_ta: e.target.value})}
-          />
+          <label className="text-sm text-gray-400">Mô tả chi tiết</label>
+          <textarea className="w-full bg-gray-700 rounded p-2 mt-1 h-24 text-white placeholder-gray-500"
+            placeholder="Tuổi cây, thế cây, hoành gốc, tình trạng sức khỏe, địa điểm xem cây..."
+            value={form.mo_ta} onChange={e => setForm({...form, mo_ta: e.target.value})} />
         </div>
 
+        {/* Video links */}
         <div>
-          <label className="text-sm text-gray-400">Ảnh cây</label>
-          {image && <img src={image} className="w-full rounded-lg my-2 max-h-64 object-cover" />}
-          <input type="file" accept="image/*" onChange={handleImage} className="w-full text-gray-300 mt-1" />
+          <label className="text-sm text-gray-400 mb-2 block">🎥 Link video (YouTube, TikTok, Facebook...)</label>
+          {[
+            { key: 'video_url', ph: 'Link video 1 (YouTube/TikTok/Facebook...)' },
+            { key: 'video_url_2', ph: 'Link video 2 (tuỳ chọn)' },
+            { key: 'video_url_3', ph: 'Link video 3 (tuỳ chọn)' },
+          ].map(f => (
+            <input key={f.key}
+              className="w-full bg-gray-700 rounded p-2 mt-2 text-white placeholder-gray-500 text-sm"
+              placeholder={f.ph} value={(form as any)[f.key]}
+              onChange={e => setForm({...form, [f.key]: e.target.value})} />
+          ))}
         </div>
+
+        {/* Preview YouTube */}
+        {form.video_url && form.video_url.includes('youtube') && (
+          <div className="rounded-xl overflow-hidden">
+            <iframe className="w-full aspect-video" src={getVideoEmbed(form.video_url) || ''} allowFullScreen />
+          </div>
+        )}
       </div>
 
       <button onClick={submit} disabled={loading}

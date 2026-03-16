@@ -1,26 +1,29 @@
 'use client'
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
 import { createClient } from '@supabase/supabase-js'
+import Link from 'next/link'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
+function getYoutubeEmbed(url: string) {
+  const yt = url?.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/)
+  return yt ? `https://www.youtube.com/embed/${yt[1]}` : null
+}
+
 export default function Marketplace() {
   const [listings, setListings] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
+  const [selected, setSelected] = useState<any>(null)
 
   useEffect(() => { fetchListings() }, [])
 
   const fetchListings = async () => {
-    const { data } = await supabase
-      .from('listings')
-      .select('*')
-      .eq('trang_thai', 'dang_ban')
-      .order('created_at', { ascending: false })
+    const { data } = await supabase.from('listings').select('*')
+      .eq('trang_thai', 'dang_ban').order('created_at', { ascending: false })
     setListings(data || [])
     setLoading(false)
   }
@@ -30,186 +33,131 @@ export default function Marketplace() {
     l.vi_tri?.toLowerCase().includes(search.toLowerCase())
   )
 
+  // Modal chi tiết
+  if (selected) return (
+    <div className="min-h-screen bg-gray-900 text-white p-4 max-w-2xl mx-auto">
+      <button onClick={() => setSelected(null)} className="text-gray-400 hover:text-white mb-4">← Quay lại</button>
+
+      {/* Gallery ảnh */}
+      {(() => {
+        const imgs = [selected.hinh_anh, selected.hinh_anh_2, selected.hinh_anh_3, selected.hinh_anh_4, selected.hinh_anh_5].filter(Boolean)
+        const [activeImg, setActiveImg] = useState(0)
+        return imgs.length > 0 ? (
+          <div className="mb-4">
+            <img src={imgs[activeImg]} className="w-full h-72 object-cover rounded-xl mb-2" />
+            {imgs.length > 1 && (
+              <div className="flex gap-2">
+                {imgs.map((img, i) => (
+                  <img key={i} src={img} onClick={() => setActiveImg(i)}
+                    className={`w-16 h-16 object-cover rounded-lg cursor-pointer ${activeImg === i ? 'ring-2 ring-green-400' : 'opacity-60'}`} />
+                ))}
+              </div>
+            )}
+          </div>
+        ) : null
+      })()}
+
+      <div className="bg-gray-800 rounded-xl p-4 mb-4">
+        <h1 className="text-xl font-bold text-green-300 mb-2">{selected.ten_cay}</h1>
+        <div className="text-2xl font-bold text-yellow-400 mb-3">{Number(selected.gia).toLocaleString('vi-VN')}đ</div>
+        {selected.vi_tri && <p className="text-gray-400 text-sm mb-2">📍 {selected.vi_tri}</p>}
+        {selected.mo_ta && <p className="text-gray-300 text-sm leading-relaxed">{selected.mo_ta}</p>}
+      </div>
+
+      {/* Video */}
+      {[selected.video_url, selected.video_url_2, selected.video_url_3].filter(Boolean).map((url, i) => {
+        const ytEmbed = getYoutubeEmbed(url)
+        return ytEmbed ? (
+          <div key={i} className="mb-3 rounded-xl overflow-hidden">
+            <iframe className="w-full aspect-video" src={ytEmbed} allowFullScreen />
+          </div>
+        ) : (
+          <a key={i} href={url} target="_blank"
+            className="block bg-gray-800 hover:bg-gray-700 rounded-xl p-3 mb-2 text-blue-400 text-sm truncate">
+            🎥 {url}
+          </a>
+        )
+      })}
+
+      {/* Liên hệ */}
+      <div className="flex gap-3 mt-4">
+        {selected.zalo && (
+          <a href={`https://zalo.me/${selected.zalo}`} target="_blank"
+            className="flex-1 bg-blue-600 hover:bg-blue-500 rounded-xl p-3 text-center font-semibold">
+            💬 Zalo
+          </a>
+        )}
+        {selected.sdt && (
+          <a href={`tel:${selected.sdt}`}
+            className="flex-1 bg-green-700 hover:bg-green-600 rounded-xl p-3 text-center font-semibold">
+            📞 Gọi ngay
+          </a>
+        )}
+      </div>
+    </div>
+  )
+
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--warm-white)' }}>
+    <div className="min-h-screen bg-gray-900 text-white p-4 max-w-4xl mx-auto">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-green-400">🌿 Chợ Cây Kiểng</h1>
+        <Link href="/marketplace/dang-ban" className="bg-green-600 hover:bg-green-500 rounded-lg px-4 py-2 text-sm font-semibold">+ Đăng bán</Link>
+      </div>
 
-      {/* NAV */}
-      <nav style={{ background: 'var(--forest)', padding: '0 28px', height: '56px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--gold)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px' }}>🌿</div>
-          <span style={{ color: '#fff', fontFamily: "'Playfair Display',serif", fontSize: '18px', fontWeight: 600 }}>Vườn Kiểng AI</span>
+      <input className="w-full bg-gray-800 rounded-lg p-3 mb-6 text-white placeholder-gray-500"
+        placeholder="🔍 Tìm cây... (tên cây, địa điểm)"
+        value={search} onChange={e => setSearch(e.target.value)} />
+
+      {loading ? (
+        <div className="text-center py-20 text-gray-400">Đang tải...</div>
+      ) : filtered.length === 0 ? (
+        <div className="text-center py-20">
+          <div className="text-5xl mb-4">🌱</div>
+          <p className="text-gray-400 mb-4">Chưa có cây nào được đăng bán</p>
+          <Link href="/marketplace/dang-ban" className="bg-green-600 text-white rounded-xl px-6 py-3 inline-block">Đăng bán ngay</Link>
         </div>
-        <div style={{ display: 'flex', gap: '4px' }}>
-          {[
-            { label: 'Dashboard', href: '/dashboard' },
-            { label: 'Chẩn đoán', href: '/chan-doan' },
-            { label: 'Chợ cây',   href: '/marketplace' },
-          ].map(link => (
-            <Link key={link.href} href={link.href} style={{
-              color: link.href === '/marketplace' ? 'var(--gold-light)' : 'rgba(255,255,255,0.65)',
-              textDecoration: 'none', fontSize: '13px', padding: '6px 14px', borderRadius: '20px',
-              background: link.href === '/marketplace' ? 'rgba(255,255,255,0.1)' : 'transparent',
-            }}>{link.label}</Link>
-          ))}
-        </div>
-        <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'var(--forest-light)', border: '2px solid var(--sage)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '13px', fontWeight: 500 }}>AN</div>
-      </nav>
-
-      {/* BODY */}
-      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '32px 24px' }}>
-
-        {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '24px' }}>
-          <div>
-            <h1 style={{ fontFamily: "'Playfair Display',serif", fontSize: '28px', fontWeight: 700, color: 'var(--forest)' }}>Chợ Cây Kiểng</h1>
-            <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginTop: '4px' }}>Mua bán minh bạch · Hộ chiếu xác thực</p>
-          </div>
-          <Link href="/marketplace/dang-ban" style={{
-            background: 'var(--forest)', color: '#fff', textDecoration: 'none',
-            padding: '10px 20px', borderRadius: '10px', fontSize: '13px', fontWeight: 600,
-            display: 'flex', alignItems: 'center', gap: '6px',
-          }}>＋ Đăng bán</Link>
-        </div>
-
-        {/* Search */}
-        <div style={{ position: 'relative', marginBottom: '20px' }}>
-          <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', fontSize: '16px', pointerEvents: 'none' }}>🔍</span>
-          <input
-            style={{ width: '100%', padding: '12px 16px 12px 44px', border: '1.5px solid var(--border)', borderRadius: '12px', fontSize: '14px', fontFamily: "'DM Sans',sans-serif", background: '#fff', outline: 'none', transition: 'all .2s', color: 'var(--text)' }}
-            placeholder="Tìm tên cây, địa điểm..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            onFocus={e => { e.target.style.borderColor = 'var(--sage)'; e.target.style.boxShadow = '0 0 0 3px rgba(90,143,106,0.1)' }}
-            onBlur={e => { e.target.style.borderColor = 'var(--border)'; e.target.style.boxShadow = 'none' }}
-          />
-        </div>
-
-        {/* Stats bar */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
-          <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
-            {loading ? 'Đang tải...' : `${filtered.length} cây đang bán`}
-          </span>
-          <div style={{ flex: 1, height: '1px', background: 'var(--border)' }} />
-        </div>
-
-        {/* Loading */}
-        {loading && (
-          <div style={{ textAlign: 'center', padding: '80px 20px', color: 'var(--text-muted)' }}>
-            <div style={{ fontSize: '40px', marginBottom: '12px', opacity: 0.3 }}>🌿</div>
-            <p style={{ fontSize: '14px' }}>Đang tải danh sách...</p>
-          </div>
-        )}
-
-        {/* Empty */}
-        {!loading && filtered.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '80px 20px', color: 'var(--text-muted)' }}>
-            <div style={{ fontSize: '48px', marginBottom: '16px', opacity: 0.3 }}>🌱</div>
-            <p style={{ fontSize: '15px', fontWeight: 500, color: 'var(--forest)', marginBottom: '8px' }}>
-              {search ? 'Không tìm thấy cây phù hợp' : 'Chưa có cây nào được đăng bán'}
-            </p>
-            <p style={{ fontSize: '13px', marginBottom: '16px' }}>
-              {search ? 'Thử tìm với từ khóa khác' : 'Hãy là người đầu tiên đăng bán!'}
-            </p>
-            <Link href="/marketplace/dang-ban" style={{ color: 'var(--forest-light)', fontWeight: 600, fontSize: '14px', textDecoration: 'none', borderBottom: '1px solid var(--forest-light)' }}>
-              Đăng bán ngay →
-            </Link>
-          </div>
-        )}
-
-        {/* Grid */}
-        {!loading && filtered.length > 0 && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '16px' }}>
-            {filtered.map(item => (
-              <div key={item.id} style={{
-                background: '#fff', border: '1px solid var(--border)', borderRadius: '16px',
-                overflow: 'hidden', transition: 'all .2s', cursor: 'pointer',
-              }}
-              onMouseEnter={e => {
-                const el = e.currentTarget as HTMLElement
-                el.style.borderColor = 'var(--sage)'
-                el.style.transform = 'translateY(-3px)'
-                el.style.boxShadow = '0 12px 28px rgba(14,45,26,0.1)'
-              }}
-              onMouseLeave={e => {
-                const el = e.currentTarget as HTMLElement
-                el.style.borderColor = 'var(--border)'
-                el.style.transform = 'none'
-                el.style.boxShadow = 'none'
-              }}>
-
-                {/* Image */}
-                <div style={{ position: 'relative', aspectRatio: '4/3', overflow: 'hidden', background: 'var(--cream)' }}>
-                  {item.hinh_anh ? (
-                    <img src={item.hinh_anh} alt={item.ten_cay} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                  ) : (
-                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '56px' }}>🌳</div>
-                  )}
-                  {item.ho_chieu && (
-                    <div style={{ position: 'absolute', top: '10px', left: '10px', background: 'var(--gold)', color: 'var(--forest)', padding: '3px 8px', borderRadius: '6px', fontSize: '11px', fontWeight: 700 }}>
-                      Hộ chiếu ✓
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filtered.map(item => {
+            const imgs = [item.hinh_anh, item.hinh_anh_2, item.hinh_anh_3, item.hinh_anh_4, item.hinh_anh_5].filter(Boolean)
+            const hasVideo = item.video_url || item.video_url_2 || item.video_url_3
+            return (
+              <div key={item.id} onClick={() => setSelected(item)}
+                className="bg-gray-800 rounded-xl overflow-hidden cursor-pointer hover:ring-2 hover:ring-green-500 transition">
+                {imgs.length > 0 ? (
+                  <div className="relative">
+                    <img src={imgs[0]} className="w-full h-48 object-cover" />
+                    {imgs.length > 1 && (
+                      <span className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full">
+                        +{imgs.length - 1} ảnh
+                      </span>
+                    )}
+                    {hasVideo && (
+                      <span className="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded-full">
+                        🎥 Video
+                      </span>
+                    )}
+                  </div>
+                ) : (
+                  <div className="w-full h-48 bg-gray-700 flex items-center justify-center text-4xl">🌿</div>
+                )}
+                <div className="p-4">
+                  <h3 className="font-bold text-green-300 mb-1 line-clamp-1">{item.ten_cay}</h3>
+                  <div className="text-yellow-400 font-bold mb-2">{Number(item.gia).toLocaleString('vi-VN')}đ</div>
+                  {item.mo_ta && <p className="text-gray-400 text-sm line-clamp-2 mb-2">{item.mo_ta}</p>}
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-gray-500">{item.vi_tri && `📍 ${item.vi_tri}`}</span>
+                    <div className="flex gap-2">
+                      {item.zalo && <span className="bg-blue-700 text-white text-xs px-2 py-1 rounded">Zalo</span>}
+                      {item.sdt && <span className="bg-green-800 text-white text-xs px-2 py-1 rounded">Gọi</span>}
                     </div>
-                  )}
-                </div>
-
-                {/* Body */}
-                <div style={{ padding: '14px' }}>
-                  <div style={{ fontFamily: "'Playfair Display',serif", fontSize: '16px', fontWeight: 600, color: 'var(--forest)', marginBottom: '4px' }}>
-                    {item.ten_cay}
-                  </div>
-                  <div style={{ fontSize: '15px', fontWeight: 700, color: 'var(--forest-light)', marginBottom: '8px' }}>
-                    {Number(item.gia).toLocaleString('vi-VN')}đ
-                  </div>
-                  {item.mo_ta && (
-                    <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px', lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                      {item.mo_ta}
-                    </p>
-                  )}
-                  <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '12px' }}>
-                    {item.vi_tri && `📍 ${item.vi_tri}`}
-                  </div>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    {item.zalo && (
-                      <a href={`https://zalo.me/${item.zalo}`} target="_blank" style={{
-                        flex: 1, padding: '8px', borderRadius: '8px', fontSize: '12px', fontWeight: 600,
-                        border: '1.5px solid #0068ff', color: '#0068ff', background: '#fff',
-                        textAlign: 'center', textDecoration: 'none', transition: 'all .2s',
-                      }}
-                      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#0068ff'; (e.currentTarget as HTMLElement).style.color = '#fff' }}
-                      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = '#fff'; (e.currentTarget as HTMLElement).style.color = '#0068ff' }}>
-                        Zalo
-                      </a>
-                    )}
-                    {item.sdt && (
-                      <a href={`tel:${item.sdt}`} style={{
-                        flex: 1, padding: '8px', borderRadius: '8px', fontSize: '12px', fontWeight: 600,
-                        border: '1.5px solid var(--forest-light)', color: 'var(--forest-light)', background: '#fff',
-                        textAlign: 'center', textDecoration: 'none', transition: 'all .2s',
-                      }}
-                      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'var(--forest-light)'; (e.currentTarget as HTMLElement).style.color = '#fff' }}
-                      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = '#fff'; (e.currentTarget as HTMLElement).style.color = 'var(--forest-light)' }}>
-                        Gọi
-                      </a>
-                    )}
                   </div>
                 </div>
               </div>
-            ))}
-
-            {/* Add card */}
-            <Link href="/marketplace/dang-ban" style={{
-              border: '1.5px dashed var(--border)', borderRadius: '16px', minHeight: '280px',
-              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-              textDecoration: 'none', color: 'var(--text-muted)', transition: 'all .2s',
-            }}
-            onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = 'var(--sage)'; el.style.background = '#f0f7f2' }}
-            onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = 'var(--border)'; el.style.background = 'transparent' }}>
-              <div style={{ fontSize: '36px', marginBottom: '8px', opacity: 0.4 }}>＋</div>
-              <div style={{ fontSize: '14px', fontWeight: 500 }}>Đăng bán cây của bạn</div>
-              <div style={{ fontSize: '12px', marginTop: '4px', textAlign: 'center', padding: '0 20px' }}>Kèm Hộ chiếu → giá cao hơn 20–30%</div>
-            </Link>
-          </div>
-        )}
-      </div>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }
