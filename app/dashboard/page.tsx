@@ -24,15 +24,15 @@ const ACTIONS = [
 ]
 
 const STATUS_MAP: any = {
-  khoe_manh: { label: 'Khỏe mạnh', bg: '#eaf3de', color: '#3b6d11', icon: '💚' },
-  can_cham:  { label: 'Cần chăm',  bg: '#faeeda', color: '#854f0b', icon: '🟡' },
-  benh:      { label: 'Đang bệnh', bg: '#fcebeb', color: '#a32d2d', icon: '🔴' },
+  khoe_manh: { label: 'Khỏe mạnh', bg: '#eaf3de', color: '#3b6d11' },
+  can_cham:  { label: 'Cần chăm',  bg: '#faeeda', color: '#854f0b' },
+  benh:      { label: 'Đang bệnh', bg: '#fcebeb', color: '#a32d2d' },
 }
 
 const VISIBILITY_MAP: any = {
-  public:   { icon: '👁️', color: '#2d6b42', label: 'Công khai' },
-  private:  { icon: '🔒', color: '#a32d2d', label: 'Riêng tư' },
-  showcase: { icon: '🏪', color: '#854f0b', label: 'Trưng bày' },
+  public:   { icon: '👁️' },
+  private:  { icon: '🔒' },
+  showcase: { icon: '🏪' },
 }
 
 export default function Dashboard() {
@@ -42,9 +42,7 @@ export default function Dashboard() {
   const [banner, setBanner] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    init()
-  }, [])
+  useEffect(() => { init() }, [])
 
   const init = async () => {
     const { data: { user } } = await supabase.auth.getUser()
@@ -66,13 +64,18 @@ export default function Dashboard() {
     setLoading(false)
   }
 
+  const logout = async () => {
+    await supabase.auth.signOut()
+    window.location.href = '/login'
+  }
+
   const userName = user?.user_metadata?.name || user?.email?.split('@')[0] || 'bạn'
   const initials = userName.slice(0, 2).toUpperCase()
 
   const stats = [
-    { label: 'Cây trong vườn',   value: passports.length.toString(), icon: '🪴', accent: '#2d6b42' },
-    { label: 'Tin đăng bán',     value: listings.toString(),          icon: '🛒', accent: '#2d6b42' },
-    { label: 'Giá trị vườn ảo',  value: passports.reduce((s, p) => s + (p.gia_tri_uoc_tinh || 0), 0).toLocaleString('vi-VN') + 'đ', icon: '💰', accent: '#c8a84b' },
+    { label: 'Cây trong vườn',  value: passports.length.toString(), icon: '🪴', accent: '#2d6b42' },
+    { label: 'Tin đăng bán',    value: listings.toString(),          icon: '🛒', accent: '#2d6b42' },
+    { label: 'Giá trị vườn ảo', value: passports.reduce((s, p) => s + (p.gia_tri_uoc_tinh || 0), 0).toLocaleString('vi-VN') + 'đ', icon: '💰', accent: '#c8a84b' },
     { label: 'Nhắc nhở hôm nay', value: '0', icon: '🔔', accent: '#2d6b42' },
   ]
 
@@ -89,8 +92,14 @@ export default function Dashboard() {
             <Link key={link.href} href={link.href} style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '6px 14px', borderRadius: '20px' }}>{link.label}</Link>
           ))}
         </div>
-        <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'var(--forest-light)', border: '2px solid var(--sage)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '13px', fontWeight: 500 }}>
-          {initials}
+        {/* Avatar + Logout */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'var(--forest-light)', border: '2px solid var(--sage)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '13px', fontWeight: 500 }}>
+            {initials}
+          </div>
+          <button onClick={logout} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '20px', color: 'rgba(255,255,255,0.7)', fontSize: '12px', padding: '5px 12px', cursor: 'pointer' }}>
+            Đăng xuất
+          </button>
         </div>
       </nav>
 
@@ -148,8 +157,7 @@ export default function Dashboard() {
                 const vis = VISIBILITY_MAP[p.visibility_mode] || VISIBILITY_MAP.public
                 return (
                   <Link key={i} href="/passport" style={{ border: '1px solid var(--border)', borderRadius: '12px', padding: '16px', textDecoration: 'none', display: 'block', position: 'relative' }}>
-                    {/* Visibility icon */}
-                    <div style={{ position: "absolute", top: "10px", right: "10px", fontSize: "14px" }}>{vis.icon}</div>
+                    <div style={{ position: 'absolute', top: '10px', right: '10px', fontSize: '14px' }}>{vis.icon}</div>
                     {p.hinh_anh ? (
                       <img src={p.hinh_anh} style={{ width: '100%', height: '80px', objectFit: 'cover', borderRadius: '8px', marginBottom: '8px' }} />
                     ) : (
@@ -159,7 +167,7 @@ export default function Dashboard() {
                     <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
                       {p.tuoi_cay && `${p.tuoi_cay} · `}{p.xuat_xu || ''}
                     </div>
-                    <div style={{ marginTop: '8px', display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+                    <div style={{ marginTop: '8px' }}>
                       <span style={{ background: st.bg, color: st.color, padding: '2px 8px', borderRadius: '20px', fontSize: '10px', fontWeight: 600 }}>{st.label}</span>
                     </div>
                   </Link>
