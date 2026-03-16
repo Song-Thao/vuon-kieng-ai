@@ -21,6 +21,7 @@ const ACTIONS = [
   { label: 'Hộ chiếu cây',       desc: 'Lịch sử chăm sóc, QR code minh bạch',     icon: '🪪', href: '/passport' },
   { label: 'Chợ cây kiểng',      desc: 'Mua bán cây với hộ chiếu xác thực',        icon: '🛒', href: '/marketplace' },
   { label: 'Blog & Wiki',         desc: 'Kiến thức cây cảnh từ cộng đồng',          icon: '📚', href: '/blog' },
+  { label: '✂️ Định hướng phôi', desc: 'AI nghệ nhân gợi ý dáng thế cây phôi',    icon: '🎋', href: '/phai-dinh-huong' },
 ]
 
 const STATUS_MAP: any = {
@@ -45,7 +46,7 @@ export default function Dashboard() {
   useEffect(() => { init() }, [])
 
   const init = async () => {
-    const { data: { user } } = await supabase.auth.getUser()
+    consconst ACTIONSt { data: { user } } = await supabase.auth.getUser()
     setUser(user)
     if (user) {
       const [{ data: ps }, { count }, { data: settings }] = await Promise.all([
