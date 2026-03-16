@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { createClient } from '@supabase/supabase-js'
+import { uploadImage } from '@/lib/uploadImage'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -81,7 +82,9 @@ export default function Passport() {
     const file = e.target.files[0]
     if (!file) return
     const b64 = await resizeImage(file)
-    setImages(prev => ({ ...prev, [slot]: b64 }))
+    // Upload lên Supabase Storage
+    const url = await uploadImage(b64, 'passport')
+    setImages(prev => ({ ...prev, [slot]: url || b64 }))
   }
 
   const save = async () => {
