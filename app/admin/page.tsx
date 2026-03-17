@@ -43,8 +43,8 @@ export default function Admin() {
     const { data: p } = await supabase.from('posts').select('*').order('created_at', { ascending: false })
     const { data: l } = await supabase.from('listings').select('*').order('created_at', { ascending: false })
     setPosts(p || [])
-    const { count: uc } = await supabase.from('passports').select('user_id', { count: 'exact', head: true })
-    setUsersCount(uc || 0)
+    const { data: ucData } = await supabase.from('user_count').select('total').single()
+    setUsersCount(ucData?.total || 0)
     setListings(l || [])
     setLoading(false)
   }
