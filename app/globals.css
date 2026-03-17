@@ -170,3 +170,8 @@ h1, h2, h3, .font-display {
   .feature-grid-3 { grid-template-columns: repeat(1,1fr) !important; gap: 12px !important; }
   .footer-grid { grid-template-columns: repeat(2,1fr) !important; gap: 20px !important; }
 }
+
+/* Hide description on mobile feature cards */
+@media (max-width: 640px) {
+  .hide-on-mobile { display: none !important; }
+}
