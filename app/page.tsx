@@ -61,6 +61,7 @@ export default function Home() {
           <Link href="/marketplace" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '14px' }}>Chợ cây</Link>
           <Link href="/blog" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '14px' }}>Blog</Link>
           <Link href="/chan-doan" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '14px' }}>Chẩn đoán AI</Link>
+          <Link href="/huong-dan" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '14px' }}>📖 Hướng dẫn</Link>
           <Link href="/phai-dinh-huong" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '14px' }}>✂️ Định hướng phôi</Link>
           <Link href="/login" style={{ background: '#2d6b42', color: '#fff', padding: '8px 20px', borderRadius: '20px', textDecoration: 'none', fontSize: '14px', fontWeight: 600 }}>Đăng nhập</Link>
         </div>
@@ -201,8 +202,8 @@ export default function Home() {
           </div>
           <div>
             <div style={{ fontWeight: 600, marginBottom: '12px', fontSize: '14px' }}>Hỗ trợ</div>
-            {['Hướng dẫn sử dụng', 'Điều khoản dịch vụ', 'Chính sách bảo mật', 'Liên hệ'].map(l => (
-              <div key={l} style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px', marginBottom: '8px' }}>{l}</div>
+            {[{l:'Hướng dẫn sử dụng',h:'/huong-dan'},{l:'Điều khoản dịch vụ',h:'#'},{l:'Chính sách bảo mật',h:'#'},{l:'Liên hệ',h:'#'}].map(item => (
+              <Link key={item.l} href={item.h} style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px', marginBottom: '8px', display: 'block', textDecoration: 'none' }}>{item.l}</Link>
             ))}
           </div>
           <div>
