@@ -163,3 +163,10 @@ h1, h2, h3, .font-display {
   .banner-wrap div { font-size: 13px !important; }
   .banner-wrap a { padding: 6px 12px !important; font-size: 12px !important; white-space: nowrap; }
 }
+
+/* Mobile grid fix */
+@media (max-width: 768px) {
+  .feature-grid-4 { grid-template-columns: repeat(2,1fr) !important; gap: 12px !important; }
+  .feature-grid-3 { grid-template-columns: repeat(1,1fr) !important; gap: 12px !important; }
+  .footer-grid { grid-template-columns: repeat(2,1fr) !important; gap: 20px !important; }
+}
