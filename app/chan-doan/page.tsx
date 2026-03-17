@@ -119,7 +119,7 @@ export default function ChanDoan() {
         .cd-warning-text { color:rgba(240,237,230,0.8); font-size:13px; line-height:1.6; }
       `}</style>
 
-      <div className="cd-wrap">
+      <div className="cd-wrap" style={getBgStyle()}>
 
         {/* ── NAV ── */}
         <nav style={{ background:'rgba(14,45,26,0.95)', backdropFilter:'blur(10px)', padding:'0 28px', height:'56px', display:'flex', alignItems:'center', justifyContent:'space-between', position:'sticky', top:0, zIndex:100, borderBottom:'1px solid rgba(127,184,138,0.12)' }}>

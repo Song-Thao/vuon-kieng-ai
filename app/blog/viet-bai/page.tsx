@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import Link from 'next/link'
+import { useTheme } from '@/lib/useTheme'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -20,6 +21,7 @@ const CATEGORIES = [
 ]
 
 export default function VietBai() {
+  const { getBgStyle } = useTheme()
   const [loading, setLoading] = useState(false)
   const [aiLoading, setAiLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -75,7 +77,7 @@ export default function VietBai() {
   }
 
   if (success) return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center" style={getBgStyle()}>
       <div className="text-center bg-white rounded-2xl p-10 shadow">
         <div className="text-6xl mb-4">🎉</div>
         <h2 className="text-2xl font-bold text-green-700 mb-2">Gửi bài thành công!</h2>
@@ -90,7 +92,7 @@ export default function VietBai() {
   )
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen p-4" style={getBgStyle()}>
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center gap-3 mb-6">
           <Link href="/blog" className="text-gray-400 hover:text-gray-600">← Blog</Link>
