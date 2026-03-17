@@ -18,6 +18,7 @@ export default function Admin() {
   const [loading, setLoading] = useState(true)
   const [settings, setSettings] = useState<any>({
     banner_title: '', banner_content: '', banner_image: '', banner_link: '',
+    bg_color: '#0e2d1a', bg_image: '', bg_overlay: '0.5', primary_color: '#c8a84b', secondary_color: '#2d6b42',
     bank_name: '', bank_account: '', bank_holder: '', momo_number: '',
     listing_fee: '0', commission_percent: '0'
   })
@@ -140,7 +141,47 @@ export default function Admin() {
                 {[
                   { key: 'banner_title', label: 'Tiêu đề banner', ph: 'VD: 🌸 Hội thi cây cảnh Cà Mau 2026' },
                   { key: 'banner_content', label: 'Nội dung', ph: 'Mô tả ngắn về sự kiện hoặc sản phẩm...' },
-                  { key: 'banner_image', label: 'Link ảnh banner', ph: 'https://...' },
+                  { key: 'banner_link', label: 'Link khi bấm', ph: 'https://...' },
+                ].map(f => (
+                  <div key={f.key}>
+                    <label className="text-sm text-gray-500">{f.label}</label>
+                    <input className="w-full border rounded-lg p-2 mt-1 text-sm"
+                      placeholder={f.ph}
+                      value={settings[f.key] || ''}
+                      onChange={e => setSettings({ ...settings, [f.key]: e.target.value })} />
+                  </div>
+                ))}
+                <div className="border-t pt-4 mt-2">
+                  <p className="text-sm font-semibold text-gray-700 mb-3">🎨 Giao dien / Theme</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs text-gray-500">Mau nen chinh</label>
+                      <div className="flex gap-2 mt-1 items-center">
+                        <input type="color" value={settings.bg_color||'#0e2d1a'} onChange={e=>setSettings({...settings,bg_color:e.target.value})} className="w-10 h-9 rounded cursor-pointer border" />
+                        <input className="flex-1 border rounded-lg p-2 text-sm" placeholder="#0e2d1a" value={settings.bg_color||''} onChange={e=>setSettings({...settings,bg_color:e.target.value})} />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-xs text-gray-500">Mau chu de (nut, accent)</label>
+                      <div className="flex gap-2 mt-1 items-center">
+                        <input type="color" value={settings.primary_color||'#c8a84b'} onChange={e=>setSettings({...settings,primary_color:e.target.value})} className="w-10 h-9 rounded cursor-pointer border" />
+                        <input className="flex-1 border rounded-lg p-2 text-sm" placeholder="#c8a84b" value={settings.primary_color||''} onChange={e=>setSettings({...settings,primary_color:e.target.value})} />
+                      </div>
+                    </div>
+                    <div className="col-span-2">
+                      <label className="text-xs text-gray-500">Anh nen (URL) — de trong neu dung mau nen</label>
+                      <input className="w-full border rounded-lg p-2 mt-1 text-sm" placeholder="https://...jpg" value={settings.bg_image||''} onChange={e=>setSettings({...settings,bg_image:e.target.value})} />
+                    </div>
+                    <div className="col-span-2">
+                      <label className="text-xs text-gray-500">Do toi overlay ({Math.round((settings.bg_overlay||0.5)*100)}%)</label>
+                      <input type="range" min="0" max="1" step="0.05" value={settings.bg_overlay||0.5} onChange={e=>setSettings({...settings,bg_overlay:e.target.value})} className="w-full mt-1" />
+                    </div>
+                  </div>
+                  <div className="mt-3 rounded-xl p-4 flex items-center justify-center text-white text-sm font-semibold" style={{background:settings.bg_color||"#0e2d1a",minHeight:"80px"}}>
+                    Preview nen: <span style={{color:settings.primary_color||"#c8a84b",marginLeft:"8px"}}>● Mau chu de</span>
+                  </div>
+                </div>
+                {[
                   { key: 'banner_link', label: 'Link khi bấm', ph: 'https://...' },
                 ].map(f => (
                   <div key={f.key}>

@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import Link from 'next/link'
+import { useTheme } from '@/lib/useTheme'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -9,6 +10,7 @@ const supabase = createClient(
 )
 
 export default function Home() {
+  const { theme, getBgStyle } = useTheme()
   const [checking, setChecking] = useState(true)
   const [listings, setListings] = useState<any[]>([])
   const [posts, setPosts] = useState<any[]>([])
@@ -41,13 +43,13 @@ export default function Home() {
   }
 
   if (checking) return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0e2d1a' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', ...getBgStyle() }}>
       <div style={{ color: '#c8a84b', fontSize: '32px' }}>🌿</div>
     </div>
   )
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0e2d1a', color: '#fff', fontFamily: "'DM Sans', sans-serif" }}>
+    <div style={{ minHeight: '100vh', color: '#fff', fontFamily: "'DM Sans', sans-serif", ...getBgStyle() }}>
 
       {/* Nav */}
       <nav style={{ padding: '0 32px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.08)', position: 'sticky', top: 0, zIndex: 100, background: '#0e2d1a' }}>
