@@ -77,7 +77,7 @@ export default function Home() {
       </nav>
       {/* Mobile menu dropdown */}
       {menuOpen && (
-        <div style={{ position: 'fixed', top: '60px', left: 0, right: 0, zIndex: 99, ...getBgStyle(), borderBottom: '1px solid rgba(255,255,255,0.1)', padding: '12px 0' }} className="show-mobile">
+        <div style={{ position: 'fixed', top: '60px', left: 0, right: 0, zIndex: 99, background: '#0e2d1a', borderBottom: '1px solid rgba(255,255,255,0.1)', padding: '8px 0', boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }} className="show-mobile">
           {[
             { href: '/marketplace', label: '🛒 Chợ cây' },
             { href: '/blog', label: '📚 Blog & Wiki' },
@@ -114,7 +114,7 @@ export default function Home() {
         <div style={{ display: 'inline-block', background: 'rgba(200,168,75,0.15)', border: '1px solid rgba(200,168,75,0.3)', borderRadius: '20px', padding: '6px 16px', fontSize: '13px', color: '#c8a84b', marginBottom: '24px' }}>
           🌿 Nơi buôn bán, giao lưu và chia sẻ kinh nghiệm cây cảnh
         </div>
-        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: '52px', fontWeight: 700, marginBottom: '16px', lineHeight: 1.15 }}>
+        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(28px, 5vw, 52px)', fontWeight: 700, marginBottom: '16px', lineHeight: 1.15 }}>
           Vườn Kiểng AI<br />
           <span style={{ color: '#c8a84b' }}>dành cho người yêu cây cảnh Việt Nam</span>
         </h1>

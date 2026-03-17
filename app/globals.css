@@ -149,3 +149,9 @@ h1, h2, h3, .font-display {
   .hero-btns { flex-direction: column !important; align-items: stretch !important; }
   .feature-grid { grid-template-columns: 1fr 1fr !important; }
 }
+
+/* Mobile hero fix */
+@media (max-width: 768px) {
+  .banner-wrap { flex-wrap: wrap !important; }
+  .banner-wrap img { width: 50px !important; height: 50px !important; }
+}
