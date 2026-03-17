@@ -85,11 +85,11 @@ export default function Home() {
       {/* Hero */}
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '60px 24px 50px', textAlign: 'center' }}>
         <div style={{ display: 'inline-block', background: 'rgba(200,168,75,0.15)', border: '1px solid rgba(200,168,75,0.3)', borderRadius: '20px', padding: '6px 16px', fontSize: '13px', color: '#c8a84b', marginBottom: '24px' }}>
-          🌿 Nền tảng cây cảnh AI đầu tiên tại Việt Nam
+          🌿 Nơi buôn bán, giao lưu và chia sẻ kinh nghiệm cây cảnh
         </div>
         <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: '52px', fontWeight: 700, marginBottom: '16px', lineHeight: 1.15 }}>
-          Nền tảng cây cảnh<br />
-          <span style={{ color: '#c8a84b' }}>thông minh nhất Việt Nam</span>
+          Vườn Kiểng AI<br />
+          <span style={{ color: '#c8a84b' }}>dành cho người yêu cây cảnh Việt Nam</span>
         </h1>
         <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '18px', marginBottom: '40px', lineHeight: 1.7 }}>
           AI chẩn đoán bệnh cây · Hộ chiếu điện tử minh bạch<br />
@@ -191,7 +191,7 @@ export default function Home() {
         <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '32px' }}>
           <div>
             <div style={{ fontFamily: "'Playfair Display', serif", fontSize: '18px', fontWeight: 700, marginBottom: '12px' }}>🌿 Vườn Kiểng AI</div>
-            <div style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px', lineHeight: 1.7 }}>Nền tảng cây cảnh thông minh nhất Việt Nam — AI + Cộng đồng</div>
+            <div style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px', lineHeight: 1.7 }}>Hỗ trợ định hướng, tạo thế bonsai cùng các công cụ và AI phân tích cây</div>
           </div>
           <div>
             <div style={{ fontWeight: 600, marginBottom: '12px', fontSize: '14px' }}>Tính năng</div>
