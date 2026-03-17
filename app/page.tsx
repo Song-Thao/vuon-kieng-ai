@@ -156,7 +156,7 @@ export default function Home() {
 
       {/* Features */}
       <div style={{ background: 'rgba(255,255,255,0.03)', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '50px 24px' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '12px' }} className="fg4" className="fg4">
+        <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '12px' }} className="fg4" className="fg4">
           {[
             { icon: '📸', title: 'AI Chẩn đoán', desc: 'Upload ảnh → AI phân tích bệnh & gợi ý thuốc ngay lập tức', href: '/chan-doan' },
             { icon: '🪪', title: 'Hộ chiếu cây', desc: 'Lịch sử chăm sóc, giải thưởng, QR code — minh bạch 100%', href: '/passport' },
@@ -164,8 +164,8 @@ export default function Home() {
             { icon: '📚', title: 'Wiki cây cảnh', desc: 'Kiến thức từ cộng đồng — Bonsai, chăm sóc, bệnh cây', href: '/blog' },
             { icon: '✂️', title: 'Định hướng dáng thế', desc: 'AI nghệ nhân gợi ý dáng thế + Bonsai Editor kéo thả cành — miễn phí', href: '/phai-dinh-huong' },
           ].map((f, i) => (
-            <Link key={i} href={f.href} style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '16px', padding: '28px', border: '1px solid rgba(255,255,255,0.08)', textDecoration: 'none', display: 'block' }}>
-              <div style={{ fontSize: '36px', marginBottom: '16px' }}>{f.icon}</div>
+            <Link key={i} href={f.href} style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '16px', padding: 'clamp(14px, 3vw, 28px)', border: '1px solid rgba(255,255,255,0.08)', textDecoration: 'none', display: 'block' }}>
+              <div style={{ fontSize: 'clamp(24px, 5vw, 36px)', marginBottom: 'clamp(8px, 2vw, 16px)' }}>{f.icon}</div>
               <div style={{ color: '#fff', fontWeight: 700, fontSize: '16px', marginBottom: '8px' }}>{f.title}</div>
               <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '13px', lineHeight: 1.6 }}>{f.desc}</div>
             </Link>
@@ -180,7 +180,7 @@ export default function Home() {
             <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '28px', fontWeight: 700 }}>🌿 Cây đang bán</h2>
             <Link href="/marketplace" style={{ color: '#c8a84b', textDecoration: 'none', fontSize: '14px' }}>Xem tất cả →</Link>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '12px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '12px' }}>
             {listings.map((item, i) => (
               <Link key={i} href="/marketplace" style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '16px', overflow: 'hidden', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.08)', display: 'block' }}>
                 {item.hinh_anh ? <img src={item.hinh_anh} alt={item.ten_cay||"Cay kieng"} loading="lazy" decoding="async" style={{ width: '100%', height: '160px', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '160px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '40px' }}>🌿</div>}
@@ -228,7 +228,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer style={{ borderTop: '1px solid rgba(255,255,255,0.08)', padding: '40px 32px', background: 'rgba(0,0,0,0.2)' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '20px' }} className="fgf">
+        <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '20px' }} className="fgf">
           <div>
             <div style={{ fontFamily: "'Playfair Display', serif", fontSize: '18px', fontWeight: 700, marginBottom: '12px' }}>🌿 Vườn Kiểng AI</div>
             <div style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px', lineHeight: 1.7 }}>Hỗ trợ định hướng, tạo thế bonsai cùng các công cụ và AI phân tích cây</div>
