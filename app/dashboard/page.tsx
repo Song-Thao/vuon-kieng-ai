@@ -46,7 +46,7 @@ export default function Dashboard() {
   useEffect(() => { init() }, [])
 
   const init = async () => {
-    consconst ACTIONSt { data: { user } } = await supabase.auth.getUser()
+    const { data: { user } } = await supabase.auth.getUser()
     setUser(user)
     if (user) {
       const [{ data: ps }, { count }, { data: settings }] = await Promise.all([
