@@ -59,6 +59,7 @@ export default function Home() {
           <Link href="/marketplace" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '14px' }}>Chợ cây</Link>
           <Link href="/blog" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '14px' }}>Blog</Link>
           <Link href="/chan-doan" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '14px' }}>Chẩn đoán AI</Link>
+          <Link href="/phai-dinh-huong" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '14px' }}>✂️ Định hướng phôi</Link>
           <Link href="/login" style={{ background: '#2d6b42', color: '#fff', padding: '8px 20px', borderRadius: '20px', textDecoration: 'none', fontSize: '14px', fontWeight: 600 }}>Đăng nhập</Link>
         </div>
       </nav>
@@ -119,6 +120,7 @@ export default function Home() {
             { icon: '🪪', title: 'Hộ chiếu cây', desc: 'Lịch sử chăm sóc, giải thưởng, QR code — minh bạch 100%', href: '/passport' },
             { icon: '🛒', title: 'Chợ cây kiểng', desc: 'Mua bán với hộ chiếu xác thực, 5 ảnh + video đầy đủ', href: '/marketplace' },
             { icon: '📚', title: 'Wiki cây cảnh', desc: 'Kiến thức từ cộng đồng — Bonsai, chăm sóc, bệnh cây', href: '/blog' },
+            { icon: '✂️', title: 'Định hướng dáng thế', desc: 'AI nghệ nhân gợi ý dáng thế + Bonsai Editor kéo thả cành — miễn phí', href: '/phai-dinh-huong' },
           ].map((f, i) => (
             <Link key={i} href={f.href} style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '16px', padding: '28px', border: '1px solid rgba(255,255,255,0.08)', textDecoration: 'none', display: 'block' }}>
               <div style={{ fontSize: '36px', marginBottom: '16px' }}>{f.icon}</div>
