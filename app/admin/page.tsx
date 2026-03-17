@@ -13,8 +13,9 @@ const ADMIN_EMAIL = 'khsongthao00@gmail.com'
 export default function Admin() {
   const [user, setUser] = useState<any>(null)
   const [posts, setPosts] = useState<any[]>([])
+  const [usersCount, setUsersCount] = useState<number>(0)
   const [listings, setListings] = useState<any[]>([])
-  const [tab, setTab] = useState<'posts'|'listings'|'settings'>('settings')
+  const [tab, setTab] = useState<'posts'|'listings'|'settings'>('posts')
   const [loading, setLoading] = useState(true)
   const [settings, setSettings] = useState<any>({
     banner_title: '', banner_content: '', banner_image: '', banner_link: '',
@@ -42,6 +43,8 @@ export default function Admin() {
     const { data: p } = await supabase.from('posts').select('*').order('created_at', { ascending: false })
     const { data: l } = await supabase.from('listings').select('*').order('created_at', { ascending: false })
     setPosts(p || [])
+    const { count: uc } = await supabase.from('passports').select('user_id', { count: 'exact', head: true })
+    setUsersCount(uc || 0)
     setListings(l || [])
     setLoading(false)
   }
@@ -107,7 +110,7 @@ export default function Admin() {
             { label: 'Chờ duyệt', value: choDuyet.length, color: 'bg-yellow-50 text-yellow-700' },
             { label: 'Tổng bài', value: posts.length, color: 'bg-green-50 text-green-700' },
             { label: 'Tin đăng bán', value: listings.length, color: 'bg-blue-50 text-blue-700' },
-            { label: 'Tổng users', value: '—', color: 'bg-purple-50 text-purple-700' },
+            { label: 'Tổng users', value: usersCount, color: 'bg-purple-50 text-purple-700' },
           ].map(s => (
             <div key={s.label} className={`${s.color} rounded-xl p-4 text-center`}>
               <div className="text-2xl font-bold">{s.value}</div>

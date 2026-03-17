@@ -156,7 +156,7 @@ export default function Home() {
 
       {/* Features */}
       <div style={{ background: 'rgba(255,255,255,0.03)', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '50px 24px' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '12px' }} className="fg4" className="fg4">
+        <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '12px' }} className="grid grid-cols-2 sm:grid-cols-4" className="grid grid-cols-2 sm:grid-cols-4">
           {[
             { icon: '📸', title: 'AI Chẩn đoán', desc: 'Upload ảnh → AI phân tích bệnh & gợi ý thuốc ngay lập tức', href: '/chan-doan' },
             { icon: '🪪', title: 'Hộ chiếu cây', desc: 'Lịch sử chăm sóc, giải thưởng, QR code — minh bạch 100%', href: '/passport' },
@@ -203,7 +203,7 @@ export default function Home() {
               <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '28px', fontWeight: 700 }}>📚 Bài viết mới nhất</h2>
               <Link href="/blog" style={{ color: '#c8a84b', textDecoration: 'none', fontSize: '14px' }}>Xem tất cả →</Link>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '16px' }} className="fg3">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '16px' }} className="grid grid-cols-1 sm:grid-cols-3">
               {posts.map((post, i) => (
                 <Link key={i} href={`/blog/${post.slug || post.id}`} style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '16px', overflow: 'hidden', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.08)', display: 'block' }}>
                   {post.hinh_dai_dien ? <img src={post.hinh_dai_dien} alt={post.tieu_de||"Bai viet"} loading="lazy" decoding="async" style={{ width: '100%', height: '140px', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '140px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '40px' }}>📝</div>}
