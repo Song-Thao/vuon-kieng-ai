@@ -71,7 +71,7 @@ export default function Home() {
       {banner?.banner_title && (
         <div style={{ maxWidth: '1100px', margin: '16px auto 0', padding: '0 24px' }}>
           <div style={{ background: 'linear-gradient(135deg,#2d6b42,#0e2d1a)', borderRadius: '16px', padding: '20px 28px', display: 'flex', gap: '16px', alignItems: 'center', border: '1px solid rgba(200,168,75,0.3)' }}>
-            {banner.banner_image && <img src={banner.banner_image} loading="lazy" decoding="async" style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0 }} />}
+            {banner.banner_image && <img src={banner.banner_image} alt={banner.banner_title||"Banner"} loading="lazy" decoding="async" style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0 }} />}
             <div style={{ flex: 1 }}>
               <div style={{ color: '#fff', fontFamily: "'Playfair Display', serif", fontSize: '18px', fontWeight: 700, marginBottom: '6px' }}>{banner.banner_title}</div>
               <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: '14px' }}>{banner.banner_content}</div>
@@ -144,7 +144,7 @@ export default function Home() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '16px' }}>
             {listings.map((item, i) => (
               <Link key={i} href="/marketplace" style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '16px', overflow: 'hidden', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.08)', display: 'block' }}>
-                {item.hinh_anh ? <img src={item.hinh_anh} loading="lazy" decoding="async" style={{ width: '100%', height: '160px', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '160px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '40px' }}>🌿</div>}
+                {item.hinh_anh ? <img src={item.hinh_anh} alt={item.ten_cay||"Cay kieng"} loading="lazy" decoding="async" style={{ width: '100%', height: '160px', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '160px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '40px' }}>🌿</div>}
                 <div style={{ padding: '16px' }}>
                   <div style={{ color: '#fff', fontWeight: 600, fontSize: '14px', marginBottom: '6px' }}>{item.ten_cay}</div>
                   <div style={{ color: '#c8a84b', fontWeight: 700 }}>{Number(item.gia).toLocaleString('vi-VN')}đ</div>
@@ -167,7 +167,7 @@ export default function Home() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '20px' }}>
               {posts.map((post, i) => (
                 <Link key={i} href={`/blog/${post.slug || post.id}`} style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '16px', overflow: 'hidden', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.08)', display: 'block' }}>
-                  {post.hinh_dai_dien ? <img src={post.hinh_dai_dien} loading="lazy" decoding="async" style={{ width: '100%', height: '140px', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '140px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '40px' }}>📝</div>}
+                  {post.hinh_dai_dien ? <img src={post.hinh_dai_dien} alt={post.tieu_de||"Bai viet"} loading="lazy" decoding="async" style={{ width: '100%', height: '140px', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '140px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '40px' }}>📝</div>}
                   <div style={{ padding: '16px' }}>
                     <div style={{ color: '#c8a84b', fontSize: '11px', marginBottom: '8px', textTransform: 'uppercase' as const }}>{post.the_loai}</div>
                     <div style={{ color: '#fff', fontWeight: 600, fontSize: '14px', lineHeight: 1.5 }}>{post.tieu_de}</div>
