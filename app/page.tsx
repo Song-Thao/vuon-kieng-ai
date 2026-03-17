@@ -11,6 +11,7 @@ const supabase = createClient(
 
 export default function Home() {
   const { theme, getBgStyle } = useTheme()
+  const [menuOpen, setMenuOpen] = useState(false)
   const [checking, setChecking] = useState(true)
   const [listings, setListings] = useState<any[]>([])
   const [posts, setPosts] = useState<any[]>([])
@@ -52,20 +53,45 @@ export default function Home() {
     <div style={{ minHeight: '100vh', color: '#fff', fontFamily: "'DM Sans', sans-serif", ...getBgStyle() }}>
 
       {/* Nav */}
-      <nav style={{ padding: '0 32px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.08)', position: 'sticky', top: 0, zIndex: 100, background: '#0e2d1a' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <nav style={{ padding: '0 20px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.08)', position: 'sticky', top: 0, zIndex: 100, ...getBgStyle() }}>
+        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
           <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#c8a84b', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px' }}>🌿</div>
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: '20px', fontWeight: 700 }}>Vườn Kiểng AI</span>
-        </div>
-        <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: '18px', fontWeight: 700, color: '#fff' }}>Vườn Kiểng AI</span>
+        </Link>
+        {/* Desktop nav */}
+        <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }} className="hidden-mobile">
           <Link href="/marketplace" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '14px' }}>Chợ cây</Link>
           <Link href="/blog" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '14px' }}>Blog</Link>
           <Link href="/chan-doan" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '14px' }}>Chẩn đoán AI</Link>
+          <Link href="/phai-dinh-huong" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '14px' }}>✂️ Định hướng</Link>
           <Link href="/huong-dan" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '14px' }}>📖 Hướng dẫn</Link>
-          <Link href="/phai-dinh-huong" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '14px' }}>✂️ Định hướng phôi</Link>
           <Link href="/login" style={{ background: '#2d6b42', color: '#fff', padding: '8px 20px', borderRadius: '20px', textDecoration: 'none', fontSize: '14px', fontWeight: 600 }}>Đăng nhập</Link>
         </div>
+        {/* Mobile hamburger */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }} className="show-mobile">
+          <Link href="/login" style={{ background: '#2d6b42', color: '#fff', padding: '6px 14px', borderRadius: '16px', textDecoration: 'none', fontSize: '13px', fontWeight: 600 }}>Đăng nhập</Link>
+          <button onClick={() => setMenuOpen(!menuOpen)} style={{ background: 'none', border: 'none', color: '#fff', fontSize: '24px', cursor: 'pointer', padding: '4px' }}>
+            {menuOpen ? '✕' : '☰'}
+          </button>
+        </div>
       </nav>
+      {/* Mobile menu dropdown */}
+      {menuOpen && (
+        <div style={{ position: 'fixed', top: '60px', left: 0, right: 0, zIndex: 99, ...getBgStyle(), borderBottom: '1px solid rgba(255,255,255,0.1)', padding: '12px 0' }} className="show-mobile">
+          {[
+            { href: '/marketplace', label: '🛒 Chợ cây' },
+            { href: '/blog', label: '📚 Blog & Wiki' },
+            { href: '/chan-doan', label: '🔬 Chẩn đoán AI' },
+            { href: '/phai-dinh-huong', label: '✂️ Định hướng phôi' },
+            { href: '/huong-dan', label: '📖 Hướng dẫn' },
+          ].map(item => (
+            <Link key={item.href} href={item.href} onClick={() => setMenuOpen(false)}
+              style={{ display: 'block', padding: '12px 24px', color: 'rgba(255,255,255,0.85)', textDecoration: 'none', fontSize: '15px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      )}
 
       {/* Banner admin - hiện cho tất cả mọi người */}
       {banner?.banner_title && (

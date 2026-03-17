@@ -122,3 +122,13 @@ h1, h2, h3, .font-display {
 .badge-gold   { background: #faeeda; color: #854f0b; }
 .badge-red    { background: #fcebeb; color: #a32d2d; }
 .badge-forest { background: var(--forest); color: #fff; }
+
+/* Mobile nav */
+@media (max-width: 768px) {
+  .hidden-mobile { display: none !important; }
+  .show-mobile { display: flex !important; }
+}
+@media (min-width: 769px) {
+  .show-mobile { display: none !important; }
+  .hidden-mobile { display: flex !important; }
+}
