@@ -132,3 +132,20 @@ h1, h2, h3, .font-display {
   .show-mobile { display: none !important; }
   .hidden-mobile { display: flex !important; }
 }
+
+/* Mobile typography */
+@media (max-width: 768px) {
+  h1 { font-size: 32px !important; }
+  .hero-title { font-size: 28px !important; }
+}
+
+/* Mobile banner */
+@media (max-width: 768px) {
+  .banner-wrap { flex-direction: column !important; gap: 12px !important; }
+  .banner-img { display: none !important; }
+  .banner-text { font-size: 14px !important; }
+  .hero-section { padding: 40px 16px 32px !important; }
+  .hero-desc { font-size: 14px !important; }
+  .hero-btns { flex-direction: column !important; align-items: stretch !important; }
+  .feature-grid { grid-template-columns: 1fr 1fr !important; }
+}
