@@ -1,6 +1,7 @@
 'use client'
 import { useState, useRef, useEffect, useCallback } from 'react'
 import Link from 'next/link'
+import { useTheme } from '@/lib/useTheme'
 import { createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(
@@ -501,6 +502,7 @@ function BonsaiEditor({ bgImage }: { bgImage: string }) {
 
 // ─── TRANG CHINH ─────────────────────────────────────────
 export default function PhaiDinhHuong() {
+  const { getBgStyle } = useTheme()
   const [tab, setTab] = useState<'phan-tich'|'editor'>('phan-tich')
   const [info, setInfo] = useState({ten_cay:'',chieu_cao:'',hoanh_goc:'',tuoi_cay:'',mo_ta:''})
   const [image, setImage] = useState('')
@@ -519,7 +521,7 @@ export default function PhaiDinhHuong() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-4 max-w-5xl mx-auto pb-20">
+    <div className="min-h-screen text-white p-4 max-w-5xl mx-auto pb-20" style={getBgStyle()}>
       <div className="flex items-center gap-3 mb-5">
         <Link href="/dashboard" className="text-gray-400 hover:text-white text-sm">← Dashboard</Link>
         <div>

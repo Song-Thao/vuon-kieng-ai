@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import Link from 'next/link'
+import { useTheme } from '@/lib/useTheme'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -19,7 +20,7 @@ function ListingModal({ item, onClose }: { item: any, onClose: () => void }) {
   const videos = [item.video_url, item.video_url_2, item.video_url_3].filter(Boolean)
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-4 max-w-2xl mx-auto">
+    <div className="min-h-screen text-white p-4 max-w-2xl mx-auto" style={getBgStyle()}>
       <button onClick={onClose} className="text-gray-400 hover:text-white mb-4 flex items-center gap-2">
         ← Quay lại chợ
       </button>
@@ -86,6 +87,7 @@ function ListingModal({ item, onClose }: { item: any, onClose: () => void }) {
 }
 
 export default function Marketplace() {
+  const { getBgStyle } = useTheme()
   const [listings, setListings] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
@@ -108,7 +110,7 @@ export default function Marketplace() {
   if (selected) return <ListingModal item={selected} onClose={() => setSelected(null)} />
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-4 max-w-4xl mx-auto">
+    <div className="min-h-screen text-white p-4 max-w-4xl mx-auto" style={getBgStyle()}>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-green-400">🌿 Chợ Cây Kiểng</h1>
         <Link href="/marketplace/dang-ban" className="bg-green-600 hover:bg-green-500 rounded-lg px-4 py-2 text-sm font-semibold">+ Đăng bán</Link>

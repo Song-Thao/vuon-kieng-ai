@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import Link from 'next/link'
+import { useTheme } from '@/lib/useTheme'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -21,6 +22,7 @@ const CATEGORIES = [
 ]
 
 export default function Blog() {
+  const { getBgStyle } = useTheme()
   const [posts, setPosts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
@@ -42,7 +44,7 @@ export default function Blog() {
   )
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={getBgStyle()}>
       {/* Header */}
       <div className="bg-green-900 text-white py-12 px-4">
         <div className="max-w-5xl mx-auto">

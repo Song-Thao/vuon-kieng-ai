@@ -1,8 +1,10 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
+import { useTheme } from '@/lib/useTheme'
 
 export default function ChanDoan() {
+  const { getBgStyle } = useTheme()
   const [image, setImage] = useState<string>('')
   const [result, setResult] = useState<any>(null)
   const [loading, setLoading] = useState(false)

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { createClient } from '@supabase/supabase-js'
 import { uploadImage } from '@/lib/uploadImage'
+import { useTheme } from '@/lib/useTheme'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -53,6 +54,7 @@ function resizeImage(file: File): Promise<string> {
 }
 
 export default function Passport() {
+  const { getBgStyle } = useTheme()
   const [passports, setPassports] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
@@ -150,7 +152,7 @@ export default function Passport() {
     const st = STATUS[p.trang_thai as keyof typeof STATUS] || STATUS.khoe_manh
     const imgs = IMG_SLOTS.map(s => p[s.key]).filter(Boolean)
     return (
-      <div style={{ minHeight:'100vh', background:'var(--warm-white)' }}>
+      <div style={{ minHeight:'100vh', ...getBgStyle() }}>
         <nav style={{ background:'var(--forest)', padding:'0 28px', height:'56px', display:'flex', alignItems:'center', justifyContent:'space-between', position:'sticky', top:0, zIndex:100 }}>
           <div style={{ display:'flex', alignItems:'center', gap:'10px' }}>
             <div style={{ width:'32px', height:'32px', borderRadius:'50%', background:'var(--gold)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'16px' }}>🌿</div>
