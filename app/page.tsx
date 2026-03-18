@@ -104,7 +104,7 @@ export default function Home() {
       {/* Banner admin - hiện cho tất cả mọi người */}
       {banner?.banner_title && (
         <div style={{ maxWidth: '1100px', margin: '16px auto 0', padding: '0 24px' }}>
-          <div style={{ background: 'linear-gradient(135deg,#2d6b42,#0e2d1a)', borderRadius: '16px', padding: '16px 20px', display: 'flex', gap: '12px', alignItems: 'flex-start', border: '1px solid rgba(200,168,75,0.3)' } } className="banner-wrap" }}>
+          <div style={{ background: 'linear-gradient(135deg,#2d6b42,#0e2d1a)', borderRadius: '16px', padding: '16px 20px', display: 'flex', gap: '12px', alignItems: 'flex-start', border: '1px solid rgba(200,168,75,0.3)' }} className="banner-wrap">
             {banner.banner_image && <img src={banner.banner_image} alt={banner.banner_title||"Banner"} loading="lazy" decoding="async" className="banner-img" style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0 }} />}
             <div style={{ flex: 1 }}>
               <div style={{ color: '#fff', fontFamily: "'Playfair Display', serif", fontSize: '16px', fontWeight: 700, marginBottom: '4px' }}>{banner.banner_title}</div>
