@@ -13,8 +13,8 @@ function getYoutubeEmbed(url: string) {
   const yt = url?.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/)
   return yt ? `https://www.youtube.com/embed/${yt[1]}` : null
 }
-
 function ListingModal({ item, onClose }: { item: any, onClose: () => void }) {
+  const { getBgStyle } = useTheme()
   const [activeImg, setActiveImg] = useState(0)
   const imgs = [item.hinh_anh, item.hinh_anh_2, item.hinh_anh_3, item.hinh_anh_4, item.hinh_anh_5].filter(Boolean)
   const videos = [item.video_url, item.video_url_2, item.video_url_3].filter(Boolean)
