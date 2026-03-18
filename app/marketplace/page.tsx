@@ -60,6 +60,11 @@ function ListingModal({ item, onClose }: { item: any, onClose: () => void }) {
               <div key={i} className="mb-3 rounded-xl overflow-hidden">
                 <iframe className="w-full aspect-video" src={ytEmbed} allowFullScreen />
               </div>
+            ) : isFacebookVideo(url) ? (
+              <a key={i} href={url} target="_blank" rel="noopener noreferrer"
+                style={{display:'flex',alignItems:'center',gap:'10px',background:'#1877f2',color:'#fff',padding:'12px 20px',borderRadius:'12px',textDecoration:'none',fontWeight:600,fontSize:'14px',marginBottom:'8px'}}>
+                🎥 Xem video trên Facebook
+              </a>
             ) : (
               <a key={i} href={url} target="_blank"
                 className="block bg-gray-800 hover:bg-gray-700 rounded-xl p-3 mb-2 text-blue-400 text-sm truncate">
