@@ -13,6 +13,9 @@ function getYoutubeEmbed(url: string) {
   const yt = url?.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/)
   return yt ? `https://www.youtube.com/embed/${yt[1]}` : null
 }
+function isFacebookVideo(url: string) {
+  return url?.includes('facebook.com') || url?.includes('fb.com') || url?.includes('fb.watch')
+}
 function ListingModal({ item, onClose }: { item: any, onClose: () => void }) {
   const { getBgStyle } = useTheme()
   const [activeImg, setActiveImg] = useState(0)
