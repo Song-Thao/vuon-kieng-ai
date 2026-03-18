@@ -11,8 +11,12 @@ const supabase = createClient(
 
 function getYoutubeEmbed(url: string) {
   if (!url) return null
+  // Embed URL trực tiếp
+  if (url.includes('youtube.com/embed/')) return url
+  // Watch URL
   const yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/)
   if (yt) return `https://www.youtube.com/embed/${yt[1]}`
+  // Shorts
   const shorts = url.match(/youtube\.com\/shorts\/([^&\s]+)/)
   if (shorts) return `https://www.youtube.com/embed/${shorts[1]}`
   return null
