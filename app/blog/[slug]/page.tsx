@@ -92,6 +92,24 @@ export default function DocBai() {
       if (line.startsWith('- ')) {
         return <li key={i} className="ml-4 text-gray-700 mb-1">• {line.slice(2)}</li>
       }
+      // YouTube embed
+      const ytMatch = line.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/)
+      if (ytMatch) {
+        return <div key={i} className="my-4 rounded-xl overflow-hidden">
+          <iframe width="100%" height="380" src={`https://www.youtube.com/embed/${ytMatch[1]}`} allowFullScreen className="rounded-xl" />
+        </div>
+      }
+      // Facebook video embed
+      const fbMatch = line.match(/facebook\.com\/.*\/videos\/([0-9]+)/)
+      if (fbMatch) {
+        return <div key={i} className="my-4 rounded-xl overflow-hidden">
+          <iframe width="100%" height="380" src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(line.trim())}&show_text=0`} allowFullScreen className="rounded-xl" />
+        </div>
+      }
+      // Image
+      if (line.match(/\.(jpg|jpeg|png|gif|webp)/i)) {
+        return <img key={i} src={line.trim()} alt="" className="w-full rounded-xl my-4 object-cover" style={{maxHeight:'400px'}} />
+      }
       if (line.trim() === '') return <br key={i} />
       return <p key={i} className="text-gray-700 mb-3 leading-relaxed">{line}</p>
     })
