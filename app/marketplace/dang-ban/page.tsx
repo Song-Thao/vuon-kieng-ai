@@ -111,7 +111,7 @@ function DangBanInner() {
     const payload = {
       ten_cay: form.ten_cay,
       mo_ta: form.mo_ta,
-      gia: parseInt(form.gia.replace(/\D/g, '')),
+      gia: parseInt(String(form.gia).replace(/\D/g, '')) || 0,
       vi_tri: form.vi_tri,
       zalo: form.zalo,
       sdt: form.sdt,
