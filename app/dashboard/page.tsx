@@ -11,7 +11,8 @@ const supabase = createClient(
 const NAV_LINKS = [
   { label: 'Dashboard',  href: '/dashboard' },
   { label: 'Chẩn đoán', href: '/chan-doan' },
-  { label: 'Chợ cây',   href: '/marketplace' },
+  { label: "Chợ cây",   href: "/marketplace" },
+  { label: "⚙️ Cá nhân", href: "/profile" },
   { label: 'Hộ chiếu',  href: '/passport' },
   { label: 'Blog',       href: '/blog' },
 ]
