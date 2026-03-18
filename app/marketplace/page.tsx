@@ -10,8 +10,12 @@ const supabase = createClient(
 )
 
 function getYoutubeEmbed(url: string) {
-  const yt = url?.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/)
-  return yt ? `https://www.youtube.com/embed/${yt[1]}` : null
+  if (!url) return null
+  const yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/)
+  if (yt) return `https://www.youtube.com/embed/${yt[1]}`
+  const shorts = url.match(/youtube\.com\/shorts\/([^&\s]+)/)
+  if (shorts) return `https://www.youtube.com/embed/${shorts[1]}`
+  return null
 }
 function isFacebookVideo(url: string) {
   return url?.includes('facebook.com') || url?.includes('fb.com') || url?.includes('fb.watch')
@@ -19,8 +23,10 @@ function isFacebookVideo(url: string) {
 function ListingModal({ item, onClose }: { item: any, onClose: () => void }) {
   const { getBgStyle } = useTheme()
   const [activeImg, setActiveImg] = useState(0)
+  const [activeVideo, setActiveVideo] = useState<string|null>(null)
   const imgs = [item.hinh_anh, item.hinh_anh_2, item.hinh_anh_3, item.hinh_anh_4, item.hinh_anh_5].filter(Boolean)
   const videos = [item.video_url, item.video_url_2, item.video_url_3].filter(Boolean)
+  const ytVideos = videos.map(v => getYoutubeEmbed(v)).filter(Boolean)
 
   return (
     <div className="min-h-screen text-white p-4 max-w-2xl mx-auto" style={getBgStyle()}>
@@ -28,18 +34,29 @@ function ListingModal({ item, onClose }: { item: any, onClose: () => void }) {
         ← Quay lại chợ
       </button>
 
-      {/* Gallery ảnh */}
-      {imgs.length > 0 && (
+      {/* Gallery ảnh + video */}
+      {(imgs.length > 0 || ytVideos.length > 0) && (
         <div className="mb-4">
-          <img src={imgs[activeImg]} className="w-full h-72 object-cover rounded-xl mb-2" />
-          {imgs.length > 1 && (
-            <div className="flex gap-2 overflow-x-auto">
-              {imgs.map((img, i) => (
-                <img key={i} src={img} onClick={() => setActiveImg(i)}
-                  className={`w-16 h-16 shrink-0 object-cover rounded-lg cursor-pointer transition ${activeImg === i ? 'ring-2 ring-green-400' : 'opacity-60 hover:opacity-100'}`} />
-              ))}
-            </div>
-          )}
+          {/* Main display */}
+          {activeVideo ? (
+            <iframe src={activeVideo} className="w-full rounded-xl mb-2" style={{height:'280px'}} allowFullScreen />
+          ) : imgs.length > 0 ? (
+            <img src={imgs[activeImg]} className="w-full h-72 object-cover rounded-xl mb-2" />
+          ) : null}
+          {/* Thumbnails row */}
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {imgs.map((img, i) => (
+              <img key={i} src={img} onClick={() => { setActiveImg(i); setActiveVideo(null) }}
+                className={`w-16 h-16 shrink-0 object-cover rounded-lg cursor-pointer transition ${!activeVideo && activeImg === i ? 'ring-2 ring-green-400' : 'opacity-60 hover:opacity-100'}`} />
+            ))}
+            {ytVideos.map((ytUrl, i) => (
+              <div key={`v${i}`} onClick={() => setActiveVideo(ytUrl!)}
+                className={`w-16 h-16 shrink-0 rounded-lg cursor-pointer relative overflow-hidden flex items-center justify-center transition ${activeVideo === ytUrl ? 'ring-2 ring-yellow-400' : 'opacity-70 hover:opacity-100'}`}
+                style={{background:'#1a1a2e',border:'1px solid rgba(255,255,255,0.1)'}}>
+                <span style={{fontSize:'24px'}}>▶️</span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
