@@ -45,7 +45,6 @@ export default function Admin() {
     setPosts(p || [])
     const { data: ucRows } = await supabase.from('user_count').select('total')
     const ucData = ucRows?.[0]
-    console.log("ucRows:", ucRows)
     setUsersCount(Number(ucData?.total) || 0)
     setListings(l || [])
     setLoading(false)
