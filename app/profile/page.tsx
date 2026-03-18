@@ -254,6 +254,7 @@ export default function ProfilePage() {
                     </button>
                     <button onClick={() => deleteListing(item.id)}
                       style={{ padding: '6px 10px', background: 'rgba(239,68,68,0.2)', color: '#f87171', border: 'none', borderRadius: '8px', fontSize: '11px', cursor: 'pointer' }}>🗑️ Xóa</button>
+                    <Link href={`/marketplace/dang-ban?edit=${item.id}`} style={{ padding: '6px 10px', background: 'rgba(200,168,75,0.2)', color: '#c8a84b', borderRadius: '8px', fontSize: '11px', textDecoration: 'none', display: 'block' }}>✏️ Sửa</Link>
                   </div>
                 </div>
               </div>
