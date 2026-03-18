@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { createClient } from '@supabase/supabase-js'
 import Link from 'next/link'
@@ -53,7 +53,7 @@ function getVideoEmbed(url: string) {
   return url
 }
 
-export default function DangBan() {
+function DangBanInner() {
   const searchParams = useSearchParams()
   const editId = searchParams.get('edit')
   const [loading, setLoading] = useState(false)
@@ -231,5 +231,12 @@ export default function DangBan() {
         {loading ? '⏳ Đang đăng...' : '🌿 Đăng bán ngay'}
       </button>
     </div>
+  )
+}
+export default function DangBan() {
+  return (
+    <Suspense fallback={<div style={{minHeight:'100vh',background:'#0e2d1a'}} />}>
+      <DangBanInner />
+    </Suspense>
   )
 }

@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { createClient } from '@supabase/supabase-js'
 import Link from 'next/link'
@@ -21,7 +21,7 @@ const CATEGORIES = [
   { value: 'kinh-nghiem', label: '📖 Kinh nghiệm chia sẻ' },
 ]
 
-export default function VietBai() {
+function VietBaiInner() {
   const { getBgStyle } = useTheme()
   const searchParams = useSearchParams()
   const editId = searchParams.get('edit')
@@ -185,5 +185,12 @@ export default function VietBai() {
         </div>
       </div>
     </div>
+  )
+}
+export default function VietBai() {
+  return (
+    <Suspense fallback={<div style={{minHeight:'100vh',background:'#0e2d1a'}} />}>
+      <VietBaiInner />
+    </Suspense>
   )
 }
