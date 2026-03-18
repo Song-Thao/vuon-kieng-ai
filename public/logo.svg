@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Chau -->
+  <rect x="22" y="52" width="20" height="8" rx="2" fill="#8B5E3C"/>
+  <rect x="20" y="50" width="24" height="4" rx="2" fill="#A0522D"/>
+  <!-- Than cay -->
+  <path d="M32 50 Q30 40 28 30 Q27 20 32 15" stroke="#5D4037" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <!-- Canh trai -->
+  <path d="M30 35 Q22 30 18 25" stroke="#5D4037" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M29 28 Q21 24 17 20" stroke="#5D4037" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <!-- Canh phai -->
+  <path d="M31 33 Q39 28 43 23" stroke="#5D4037" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M31 26 Q38 22 42 18" stroke="#5D4037" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <!-- La trai -->
+  <ellipse cx="16" cy="23" rx="8" ry="6" fill="#2E7D32" transform="rotate(-20 16 23)"/>
+  <ellipse cx="15" cy="18" rx="7" ry="5" fill="#388E3C" transform="rotate(-10 15 18)"/>
+  <!-- La phai -->
+  <ellipse cx="44" cy="21" rx="8" ry="6" fill="#2E7D32" transform="rotate(20 44 21)"/>
+  <ellipse cx="43" cy="16" rx="7" ry="5" fill="#388E3C" transform="rotate(10 43 16)"/>
+  <!-- La dinh -->
+  <ellipse cx="32" cy="12" rx="9" ry="7" fill="#1B5E20"/>
+  <ellipse cx="32" cy="10" rx="7" ry="5" fill="#2E7D32"/>
+</svg>

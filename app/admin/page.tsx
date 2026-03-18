@@ -155,6 +155,28 @@ export default function Admin() {
                       onChange={e => setSettings({ ...settings, [f.key]: e.target.value })} />
                   </div>
                 ))}
+                <div>
+                  <label className="text-sm text-gray-500">🖼️ Ảnh banner</label>
+                  <div className="flex gap-2 mt-1">
+                    <input className="flex-1 border rounded-lg p-2 text-sm" placeholder="Dán URL ảnh hoặc upload..."
+                      value={settings.banner_image||''} onChange={e=>setSettings({...settings,banner_image:e.target.value})} />
+                    <label className="bg-green-600 text-white px-3 py-2 rounded-lg text-sm cursor-pointer hover:bg-green-700">
+                      📁 Upload
+                      <input type="file" accept="image/*" className="hidden" onChange={async e => {
+                        const file = e.target.files?.[0]
+                        if (!file) return
+                        const ext = file.name.split('.').pop()
+                        const path = `banner/${Date.now()}.${ext}`
+                        const { data, error } = await supabase.storage.from('images').upload(path, file, { upsert: true })
+                        if (!error) {
+                          const { data: urlData } = supabase.storage.from('images').getPublicUrl(path)
+                          setSettings(s => ({...s, banner_image: urlData.publicUrl}))
+                        }
+                      }} />
+                    </label>
+                  </div>
+                  {settings.banner_image && <img src={settings.banner_image} className="mt-2 rounded-lg h-20 object-cover" alt="banner preview" />}
+                </div>
                 <div className="border-t pt-4 mt-2">
                   <p className="text-sm font-semibold text-gray-700 mb-3">🎨 Giao dien / Theme</p>
                   <div className="grid grid-cols-2 gap-3">
