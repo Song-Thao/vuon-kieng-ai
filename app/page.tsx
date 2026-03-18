@@ -48,11 +48,6 @@ export default function Home() {
       <div style={{ color: '#c8a84b', fontSize: '32px' }}>🌿</div>
     </div>
   )
-  const _ = null // placeholder
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', ...getBgStyle() }}>
-      <div style={{ color: '#c8a84b', fontSize: '32px' }}>🌿</div>
-    </div>
-  )
 
   return (
     <div style={{ minHeight: '100vh', color: '#fff', fontFamily: "'DM Sans', sans-serif", ...getBgStyle() }}>
