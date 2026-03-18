@@ -1,5 +1,6 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { createClient } from '@supabase/supabase-js'
 import Link from 'next/link'
 import { uploadImage } from '@/lib/uploadImage'
@@ -53,7 +54,29 @@ function getVideoEmbed(url: string) {
 }
 
 export default function DangBan() {
+  const searchParams = useSearchParams()
+  const editId = searchParams.get('edit')
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (editId) {
+      supabase.from('listings').select('*').eq('id', editId).single().then(({ data }) => {
+        if (data) {
+          setForm({
+            ten_cay: data.ten_cay || '',
+            mo_ta: data.mo_ta || '',
+            gia: data.gia || '',
+            vi_tri: data.vi_tri || '',
+            zalo: data.zalo || '',
+            sdt: data.sdt || '',
+            video_url: data.video_url || '',
+            video_url_2: data.video_url_2 || '',
+            video_url_3: data.video_url_3 || '',
+          })
+        }
+      })
+    }
+  }, [editId])
   const [success, setSuccess] = useState(false)
   const [images, setImages] = useState({ ...emptyImages })
   const [uploadingSlot, setUploadingSlot] = useState<string>('')
@@ -78,7 +101,7 @@ export default function DangBan() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { window.location.href = '/login'; return }
 
-    const { error } = await supabase.from('listings').insert({
+    const payload = {
       ten_cay: form.ten_cay,
       mo_ta: form.mo_ta,
       gia: parseInt(form.gia.replace(/\D/g, '')),
@@ -93,8 +116,15 @@ export default function DangBan() {
       video_url: form.video_url || null,
       video_url_2: form.video_url_2 || null,
       video_url_3: form.video_url_3 || null,
-      user_id: user.id
-    })
+    }
+    let error
+    if (editId) {
+      const { error: e } = await supabase.from('listings').update(payload).eq('id', editId)
+      error = e
+    } else {
+      const { error: e } = await supabase.from('listings').insert({ ...payload, user_id: user.id })
+      error = e
+    }
     setLoading(false)
     if (error) alert('Lỗi: ' + error.message)
     else setSuccess(true)
