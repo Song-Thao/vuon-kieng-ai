@@ -81,6 +81,7 @@ export default function Dashboard() {
     { label: 'Nhắc nhở hôm nay', value: '0', icon: '🔔', accent: '#2d6b42' },
   ]
 
+  if (!user) return null
   return (
     <div style={{ minHeight: '100vh', background: 'var(--warm-white)' }}>
       {/* Nav */}
