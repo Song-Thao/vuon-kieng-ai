@@ -232,7 +232,7 @@ export default function ChanDoan() {
                 <div className="cd-section">
                   <div className="cd-section-title">🛒 Sản phẩm cần mua</div>
                   {result.san_pham_can.map((s:string,i:number) => (
-                    <a key={i} href={`https://s.shopee.vn/8ARRrpp0qm?keyword=${encodeURIComponent(s)}`} target="_blank" className="cd-shopee-btn">🛒 {s} → Tìm trên Shopee</a>
+                    <a key={i} href={`https://s.shopee.vn/8ARRrpp0qm?keyword=${encodeURIComponent(s.replace(/\s*\(.*?\)/g, "").trim())}`} target="_blank" className="cd-shopee-btn">🛒 {s} → Tìm trên Shopee</a>
                   ))}
                 </div>
               )}
