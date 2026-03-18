@@ -1,5 +1,6 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { createClient } from '@supabase/supabase-js'
 import Link from 'next/link'
 import { useTheme } from '@/lib/useTheme'
@@ -22,8 +23,24 @@ const CATEGORIES = [
 
 export default function VietBai() {
   const { getBgStyle } = useTheme()
+  const searchParams = useSearchParams()
+  const editId = searchParams.get('edit')
   const [loading, setLoading] = useState(false)
   const [aiLoading, setAiLoading] = useState(false)
+
+  useEffect(() => {
+    if (editId) {
+      supabase.from('posts').select('*').eq('id', editId).single().then(({ data }) => {
+        if (data) setForm({
+          tieu_de: data.tieu_de || '',
+          tom_tat: data.tom_tat || '',
+          noi_dung: data.noi_dung || '',
+          the_loai: data.the_loai || 'kinh-nghiem',
+          tags: data.tags?.join(', ') || '',
+        })
+      })
+    }
+  }, [editId])
   const [success, setSuccess] = useState(false)
   const [form, setForm] = useState({
     tieu_de: '',
@@ -60,17 +77,32 @@ export default function VietBai() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { window.location.href = '/login'; return }
 
-    const { error } = await supabase.from('posts').insert({
-      tieu_de: form.tieu_de,
-      slug: taoSlug(form.tieu_de) + '-' + Date.now(),
-      tom_tat: form.tom_tat,
-      noi_dung: form.noi_dung,
-      the_loai: form.the_loai,
-      tags: form.tags.split(',').map(t => t.trim()).filter(Boolean),
-      trang_thai: 'cho_duyet',
-      user_id: user.id,
-      ai_viet: false
-    })
+    let error
+    if (editId) {
+      // Update bai cu
+      const { error: e } = await supabase.from('posts').update({
+        tieu_de: form.tieu_de,
+        tom_tat: form.tom_tat,
+        noi_dung: form.noi_dung,
+        the_loai: form.the_loai,
+        tags: form.tags.split(',').map(t => t.trim()).filter(Boolean),
+      }).eq('id', editId)
+      error = e
+    } else {
+      // Tao bai moi
+      const { error: e } = await supabase.from('posts').insert({
+        tieu_de: form.tieu_de,
+        slug: taoSlug(form.tieu_de) + '-' + Date.now(),
+        tom_tat: form.tom_tat,
+        noi_dung: form.noi_dung,
+        the_loai: form.the_loai,
+        tags: form.tags.split(',').map(t => t.trim()).filter(Boolean),
+        trang_thai: 'cho_duyet',
+        user_id: user.id,
+        ai_viet: false
+      })
+      error = e
+    }
     setLoading(false)
     if (error) alert('Lỗi: ' + error.message)
     else setSuccess(true)
