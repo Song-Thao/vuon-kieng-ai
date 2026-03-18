@@ -54,8 +54,8 @@ Tra ve JSON chinh xac (khong markdown, khong giai thich):
     "anh_sang": "so gio nang + thoi diem trong ngay"
   },
   "san_pham_can": [
-    "Ten thuoc/phan cu the 1 (co ban tren Shopee VN)",
-    "Ten thuoc/phan cu the 2"
+    "Ten thuoc/phan ngan gon 1",
+    "Ten thuoc/phan ngan gon 2"
   ],
   "canh_bao": "dieu tuyet doi tranh voi loai cay nay trong tinh trang nay"
 }`
