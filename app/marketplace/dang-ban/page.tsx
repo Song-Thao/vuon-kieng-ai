@@ -73,6 +73,13 @@ function DangBanInner() {
             video_url_2: data.video_url_2 || '',
             video_url_3: data.video_url_3 || '',
           })
+          setImages({
+            hinh_anh: data.hinh_anh || '',
+            hinh_anh_2: data.hinh_anh_2 || '',
+            hinh_anh_3: data.hinh_anh_3 || '',
+            hinh_anh_4: data.hinh_anh_4 || '',
+            hinh_anh_5: data.hinh_anh_5 || '',
+          })
         }
       })
     }
