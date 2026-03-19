@@ -56,8 +56,9 @@ export default function Home() {
   }
 
   const heroBg = cfg.hero_bg_image ||
-    'https://images.pexels.com/photos/1302305/pexels-photo-1302305.jpeg?auto=compress&cs=tinysrgb&w=1600'
-  const overlayOpacity = parseFloat(cfg.bg_overlay || '0.5')
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Bonsai_IMG_6426.jpg/1280px-Bonsai_IMG_6426.jpg'
+  const overlayOpacity = parseFloat(cfg.bg_overlay || '0.35')
+  console.log('DEBUG overlay:', cfg.bg_overlay, '→', overlayOpacity)
 
   if (loading) return (
     <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',background:'#0a1f0f'}}>
