@@ -41,7 +41,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
       <style dangerouslySetInnerHTML={{__html: `
         body {
           background-color: ${bgColor} !important;
-          ${bgImage ? `background-image: url('${bgImage}'); background-size: cover; background-position: center; background-attachment: fixed;` : ''}
+          ${bgImage ? `background-image: url('${bgImage}'); background-size: cover; background-position: center; background-attachment: scroll;` : ''}
         }
         body::before {
           content: '';
