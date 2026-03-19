@@ -72,12 +72,12 @@ export default function DocBai() {
     fetchPost()
   }
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center text-gray-400">Đang tải...</div>
+  if (loading) return <div className="min-h-screen flex items-center justify-center" style={{color:"rgba(255,255,255,0.5)"}}>Đang tải...</div>
   if (!post) return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center">
         <div className="text-5xl mb-4">😕</div>
-        <p className="text-gray-500 mb-4">Không tìm thấy bài viết</p>
+        <p className="mb-4" style={{color:"rgba(255,255,255,0.6)"}}>Không tìm thấy bài viết</p>
         <Link href="/blog" className="bg-green-700 text-white rounded-xl px-6 py-3">← Về Blog</Link>
       </div>
     </div>
@@ -90,7 +90,7 @@ export default function DocBai() {
         return <h3 key={i} className="text-lg font-bold text-green-800 mt-6 mb-2">{line.replace(/\*\*/g, '')}</h3>
       }
       if (line.startsWith('- ')) {
-        return <li key={i} className="ml-4 text-gray-700 mb-1">• {line.slice(2)}</li>
+        return <li key={i} className="ml-4 mb-1" style={{color:"rgba(255,255,255,0.85)"}}>• {line.slice(2)}</li>
       }
       // YouTube embed
       const ytMatch = line.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/)
@@ -111,7 +111,7 @@ export default function DocBai() {
         return <img key={i} src={line.trim()} alt="" className="w-full rounded-xl my-4 object-cover" style={{maxHeight:'400px'}} />
       }
       if (line.trim() === '') return <br key={i} />
-      return <p key={i} className="text-gray-700 mb-3 leading-relaxed">{line}</p>
+      return <p key={i} className="mb-3 leading-relaxed" style={{color:"rgba(255,255,255,0.85)"}}>{line}</p>
     })
   }
 
@@ -149,7 +149,7 @@ export default function DocBai() {
           {post.tags?.length > 0 && (
             <div className="flex gap-2 flex-wrap mt-6 pt-6 border-t">
               {post.tags.map((tag: string, i: number) => (
-                <span key={i} className="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">#{tag}</span>
+                <span key={i} className="text-xs px-3 py-1 rounded-full" style={{background:"rgba(255,255,255,0.1)",color:"rgba(255,255,255,0.7)"}}>#{tag}</span>
               ))}
             </div>
           )}
@@ -157,21 +157,21 @@ export default function DocBai() {
           {/* Like & Share */}
           <div className="flex items-center gap-4 mt-6 pt-6 border-t">
             <button onClick={toggleLike}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition ${liked ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600 hover:bg-red-50'}`}>
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition ${liked ? 'bg-red-100 text-red-600' : 'bg-white/10 text-white/70 hover:bg-red-500/20'}`}>
               ❤️ {post.luot_like || 0} Thích
             </button>
-            <span className="text-gray-400 text-sm">👁️ {post.luot_xem || 0} lượt xem</span>
+            <span className="text-sm" style={{color:"rgba(255,255,255,0.45)"}}>👁️ {post.luot_xem || 0} lượt xem</span>
           </div>
         </div>
 
         {/* Bình luận */}
         <div className="bg-white rounded-2xl p-6 shadow-sm mt-4">
-          <h3 className="font-bold text-gray-800 mb-4">💬 Bình luận ({comments.length})</h3>
+          <h3 className="font-bold mb-4" style={{color:"#fff"}}>💬 Bình luận ({comments.length})</h3>
 
           {comments.map((c, i) => (
             <div key={i} className="border-b pb-3 mb-3">
-              <div className="text-xs text-gray-400 mb-1">{new Date(c.created_at).toLocaleDateString('vi-VN')}</div>
-              <p className="text-gray-700">{c.noi_dung}</p>
+              <div className="text-xs mb-1" style={{color:"rgba(255,255,255,0.4)"}}>{new Date(c.created_at).toLocaleDateString('vi-VN')}</div>
+              <p className="" style={{color:"rgba(255,255,255,0.85)"}}>{c.noi_dung}</p>
             </div>
           ))}
 
