@@ -58,19 +58,19 @@ export default function ChanDoan() {
     <>
       <style>{`
         .cd-wrap { min-height:100vh; background:transparent; font-family:'DM Sans',sans-serif; color:#f0ede6; }
-        .cd-hero { background:linear-gradient(135deg,rgba(26,68,40,0.35),rgba(14,45,26,0.35)); padding:40px 24px 32px; text-align:center; position:relative; overflow:hidden; }
+        .cd-hero { background:linear-gradient(135deg,rgba(26,68,40,0.2),rgba(14,45,26,0.2)); padding:40px 24px 32px; text-align:center; position:relative; overflow:hidden; }
         .cd-hero::before { content:''; position:absolute; inset:0; background-image:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.015) 40px,rgba(255,255,255,0.015) 41px); }
         .cd-hero-badge { display:inline-block; background:rgba(200,168,75,0.15); border:1px solid rgba(200,168,75,0.3); color:var(--gold); font-size:11px; font-weight:600; letter-spacing:2px; text-transform:uppercase; padding:6px 16px; border-radius:20px; margin-bottom:16px; position:relative; }
         .cd-hero h1 { font-family:'Playfair Display',serif; font-size:clamp(26px,6vw,38px); font-weight:700; color:#f0ede6; line-height:1.2; margin-bottom:8px; position:relative; }
         .cd-hero h1 span { color:#a8d5b5; }
         .cd-hero p { color:rgba(184,212,190,0.7); font-size:14px; position:relative; }
         .cd-body { max-width:640px; margin:0 auto; padding:0 16px 60px; }
-        .cd-card { background:rgba(26,58,30,0.25); border:1px solid rgba(127,184,138,0.15); border-radius:20px; padding:24px; margin-top:20px; }
+        .cd-card { background:rgba(26,58,30,0.15); border:1px solid rgba(127,184,138,0.15); border-radius:20px; padding:24px; margin-top:20px; }
         .cd-card-title { font-family:'Playfair Display',serif; font-size:16px; color:#a8d5b5; margin-bottom:20px; display:flex; align-items:center; gap:8px; }
         .cd-card-title::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,rgba(127,184,138,0.3),transparent); }
         .cd-field { margin-bottom:16px; }
         .cd-field label { display:flex; align-items:center; gap:6px; font-size:12px; font-weight:500; color:rgba(184,212,190,0.8); letter-spacing:0.5px; margin-bottom:8px; text-transform:uppercase; }
-        .cd-field input, .cd-field textarea { width:100%; background:rgba(13,31,15,0.35); border:1px solid rgba(127,184,138,0.2); border-radius:12px; padding:12px 16px; color:#f0ede6; font-family:'DM Sans',sans-serif; font-size:14px; transition:all 0.2s; outline:none; }
+        .cd-field input, .cd-field textarea { width:100%; background:rgba(13,31,15,0.2); border:1px solid rgba(127,184,138,0.2); border-radius:12px; padding:12px 16px; color:#f0ede6; font-family:'DM Sans',sans-serif; font-size:14px; transition:all 0.2s; outline:none; }
         .cd-field input::placeholder, .cd-field textarea::placeholder { color:rgba(184,212,190,0.3); font-size:13px; }
         .cd-field input:focus, .cd-field textarea:focus { border-color:rgba(127,184,138,0.5); box-shadow:0 0 0 3px rgba(127,184,138,0.08); }
         .cd-field textarea { height:90px; resize:vertical; }
@@ -82,7 +82,7 @@ export default function ChanDoan() {
         .cd-upload-sub { color:rgba(184,212,190,0.45); font-size:12px; }
         .cd-upload-area input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
         .cd-preview { width:100%; max-height:280px; object-fit:cover; display:block; }
-        .cd-preview-overlay { position:absolute; inset:0; background:rgba(13,31,15,0.4); display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .2s; }
+        .cd-preview-overlay { position:absolute; inset:0; background:rgba(13,31,15,0.15); display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .2s; }
         .cd-upload-area:hover .cd-preview-overlay { opacity:1; }
         .cd-preview-change { background:rgba(13,31,15,0.8); border:1px solid rgba(127,184,138,0.4); color:#a8d5b5; padding:8px 20px; border-radius:20px; font-size:13px; }
         .cd-btn { width:100%; margin-top:20px; padding:16px; background:linear-gradient(135deg,var(--forest-light),var(--sage)); border:none; border-radius:16px; color:white; font-family:'DM Sans',sans-serif; font-size:15px; font-weight:600; cursor:pointer; transition:all .3s; }
@@ -95,13 +95,13 @@ export default function ChanDoan() {
         .cd-result-header { display:flex; align-items:center; gap:10px; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid rgba(127,184,138,0.15); }
         .cd-result-header h2 { font-family:'Playfair Display',serif; font-size:20px; color:#a8d5b5; }
         .cd-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
-        .cd-info-box { background:rgba(13,31,15,0.5); border:1px solid rgba(127,184,138,0.12); border-radius:14px; padding:14px; }
+        .cd-info-box { background:rgba(13,31,15,0.2); border:1px solid rgba(127,184,138,0.12); border-radius:14px; padding:14px; }
         .cd-info-label { font-size:10px; text-transform:uppercase; letter-spacing:1px; color:#5a8f6a; margin-bottom:6px; }
         .cd-info-value { font-size:15px; font-weight:600; color:#f0ede6; }
         .cd-info-sub { font-size:11px; color:rgba(184,212,190,0.6); margin-top:3px; }
         .cd-disease { color:#ff7675; }
         .cd-badge { display:inline-flex; align-items:center; gap:4px; font-size:12px; margin-top:4px; }
-        .cd-section { background:rgba(13,31,15,0.4); border:1px solid rgba(127,184,138,0.1); border-radius:14px; padding:16px; margin-bottom:10px; }
+        .cd-section { background:rgba(13,31,15,0.15); border:1px solid rgba(127,184,138,0.1); border-radius:14px; padding:16px; margin-bottom:10px; }
         .cd-section-title { font-size:11px; text-transform:uppercase; letter-spacing:1px; color:#5a8f6a; margin-bottom:10px; }
         .cd-cause-main { color:#e8d08a; font-weight:600; font-size:15px; margin-bottom:6px; }
         .cd-cause-sub { color:rgba(184,212,190,0.7); font-size:13px; padding:3px 0; }
