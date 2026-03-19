@@ -31,7 +31,7 @@ export function useTheme() {
   useEffect(() => {
     if (cachedTheme) { setTheme(cachedTheme); setLoading(false); return }
     supabase.from('admin_settings').select('*')
-      .in('key', ['bg_color','bg_image','bg_overlay','primary_color','secondary_color'])
+      .in('key', ['bg_color','bg_image','bg_overlay','primary_color','secondary_color','hero_bg_image'])
       .then(({ data }) => {
         if (data && data.length > 0) {
           const obj: any = {}
@@ -45,9 +45,10 @@ export function useTheme() {
   }, [])
 
   const getBgStyle = () => {
-    if (theme.bg_image) {
+    const bgImg = (theme as any).hero_bg_image || theme.bg_image
+    if (bgImg) {
       return {
-        background: `linear-gradient(rgba(0,0,0,${theme.bg_overlay}), rgba(0,0,0,${theme.bg_overlay})), url(${theme.bg_image}) center/cover no-repeat fixed`,
+        background: `linear-gradient(rgba(0,0,0,${theme.bg_overlay}), rgba(0,0,0,${theme.bg_overlay})), url(${bgImg}) center/cover no-repeat fixed`,
         backgroundColor: theme.bg_color,
       }
     }
