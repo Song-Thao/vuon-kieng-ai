@@ -47,13 +47,9 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
           content: '';
           position: fixed;
           inset: 0;
-          background: rgba(${hexToRgb(bgColor)}, ${overlay});
+          background: rgba(${hexToRgb(bgColor)}, ${Math.min(overlay * 0.6, 0.5)});
           pointer-events: none;
           z-index: 0;
-        }
-        /* Đảm bảo sections không che ảnh nền */
-        section, main, .page-wrapper {
-          background: transparent !important;
         }
         #__next, body > * { position: relative; z-index: 1; }
         :root { --primary: ${cfg.primary_color || '#c8a84b'}; --bg: ${bgColor}; }
