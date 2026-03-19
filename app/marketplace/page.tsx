@@ -9,6 +9,82 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
+
+function useListingFeatures(listingId, currentUser) {
+  const [likes, setLikes] = useState(0)
+  const [liked, setLiked] = useState(false)
+  const [comments, setComments] = useState([])
+  const [newComment, setNewComment] = useState('')
+  const [commenting, setCommenting] = useState(false)
+  const [showOrder, setShowOrder] = useState(false)
+  const [orderForm, setOrderForm] = useState({ ten: '', sdt: '', dia_chi: '', phuong_thuc: 'cod' })
+  const [ordering, setOrdering] = useState(false)
+  const [orderSuccess, setOrderSuccess] = useState(false)
+  const [copied, setCopied] = useState(false)
+
+  useEffect(() => {
+    if (!listingId) return
+    supabase.from('listing_likes').select('*', { count: 'exact' }).eq('listing_id', listingId)
+      .then(({ data, count }) => {
+        setLikes(count || 0)
+        if (currentUser) setLiked(data?.some(l => l.user_id === currentUser.id) || false)
+      })
+    supabase.from('listing_comments').select('*').eq('listing_id', listingId).order('created_at', { ascending: true })
+      .then(({ data }) => setComments(data || []))
+    const channel = supabase.channel('listing-' + listingId)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'listing_comments', filter: 'listing_id=eq.' + listingId },
+        (payload) => setComments(prev => [...prev, payload.new]))
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'listing_likes', filter: 'listing_id=eq.' + listingId },
+        () => setLikes(prev => prev + 1))
+      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'listing_likes', filter: 'listing_id=eq.' + listingId },
+        () => setLikes(prev => Math.max(0, prev - 1)))
+      .subscribe()
+    return () => { supabase.removeChannel(channel) }
+  }, [listingId, currentUser?.id])
+
+  const toggleLike = async () => {
+    if (!currentUser) { alert('Vui lòng đăng nhập để thích!'); return }
+    if (liked) {
+      await supabase.from('listing_likes').delete().eq('listing_id', listingId).eq('user_id', currentUser.id)
+      setLiked(false)
+    } else {
+      await supabase.from('listing_likes').insert({ listing_id: listingId, user_id: currentUser.id })
+      setLiked(true)
+    }
+  }
+
+  const submitComment = async () => {
+    if (!currentUser) { alert('Vui lòng đăng nhập để bình luận!'); return }
+    if (!newComment.trim()) return
+    setCommenting(true)
+    const userName = currentUser.user_metadata?.name || currentUser.email?.split('@')[0] || 'Ẩn danh'
+    await supabase.from('listing_comments').insert({ listing_id: listingId, user_id: currentUser.id, user_name: userName, noi_dung: newComment.trim() })
+    setNewComment('')
+    setCommenting(false)
+  }
+
+  const copyLink = () => {
+    navigator.clipboard.writeText(window.location.origin + '/marketplace?id=' + listingId)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  const submitOrder = async (item) => {
+    if (!orderForm.ten || !orderForm.sdt || !orderForm.dia_chi) { alert('Vui lòng điền đầy đủ thông tin!'); return }
+    setOrdering(true)
+    await supabase.from('orders').insert({
+      listing_id: listingId, buyer_id: currentUser?.id || null,
+      seller_id: item.user_id, ten_nguoi_mua: orderForm.ten,
+      sdt: orderForm.sdt, dia_chi: orderForm.dia_chi,
+      phuong_thuc: orderForm.phuong_thuc, gia: item.gia, trang_thai: 'pending'
+    })
+    setOrdering(false)
+    setOrderSuccess(true)
+  }
+
+  return { likes, liked, toggleLike, comments, newComment, setNewComment, commenting, submitComment, showOrder, setShowOrder, orderForm, setOrderForm, ordering, orderSuccess, submitOrder, copied, copyLink }
+}
+
 function getYoutubeEmbed(url: string) {
   if (!url) return null
   // Embed URL trực tiếp
@@ -29,9 +105,15 @@ function ListingModal({ item, onClose }: { item: any, onClose: () => void }) {
   const [activeImg, setActiveImg] = useState(0)
   const [activeVideo, setActiveVideo] = useState<string|null>(null)
   const [lightbox, setLightbox] = useState<string|null>(null)
+  const [currentUser, setCurrentUser] = useState<any>(null)
   const imgs = [item.hinh_anh, item.hinh_anh_2, item.hinh_anh_3, item.hinh_anh_4, item.hinh_anh_5].filter(Boolean)
   const videos = [item.video_url, item.video_url_2, item.video_url_3].filter(Boolean)
   const ytVideos = videos.map(v => getYoutubeEmbed(v)).filter(Boolean)
+  const { likes, liked, toggleLike, comments, newComment, setNewComment, commenting, submitComment, showOrder, setShowOrder, orderForm, setOrderForm, ordering, orderSuccess, submitOrder, copied, copyLink } = useListingFeatures(item.id, currentUser)
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setCurrentUser(data.user))
+  }, [])
 
   return (
     <div className="min-h-screen text-white p-4 max-w-2xl mx-auto" style={getBgStyle()}>
@@ -98,7 +180,7 @@ function ListingModal({ item, onClose }: { item: any, onClose: () => void }) {
       )}
 
       {/* Liên hệ */}
-      <div className="flex gap-3">
+      <div className="flex gap-3 mb-4">
         {item.zalo && (
           <a href={`https://zalo.me/${item.zalo}`} target="_blank"
             className="flex-1 bg-blue-600 hover:bg-blue-500 rounded-xl p-3 text-center font-semibold">
@@ -111,6 +193,107 @@ function ListingModal({ item, onClose }: { item: any, onClose: () => void }) {
             📞 Gọi ngay
           </a>
         )}
+        <button onClick={() => setShowOrder(true)}
+          className="flex-1 rounded-xl p-3 text-center font-semibold text-white"
+          style={{background:'#c8a84b',color:'#0e2d1a'}}>
+          🛒 Mua ngay
+        </button>
+      </div>
+
+      {/* Like / Share */}
+      <div className="flex gap-3 mb-4">
+        <button onClick={toggleLike}
+          className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition"
+          style={{background: liked ? 'rgba(239,68,68,0.2)' : 'rgba(255,255,255,0.08)', color: liked ? '#f87171' : 'rgba(255,255,255,0.7)', border: liked ? '1px solid rgba(239,68,68,0.3)' : '1px solid rgba(255,255,255,0.1)'}}>
+          {liked ? '❤️' : '🤍'} {likes}
+        </button>
+        <button onClick={copyLink}
+          className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition"
+          style={{background:'rgba(255,255,255,0.08)',color:'rgba(255,255,255,0.7)',border:'1px solid rgba(255,255,255,0.1)'}}>
+          {copied ? '✅ Đã copy!' : '🔗 Copy link'}
+        </button>
+        <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.origin + '/marketplace?id=' + item.id)}`}
+          target="_blank"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold"
+          style={{background:'rgba(24,119,242,0.15)',color:'#60a5fa',border:'1px solid rgba(24,119,242,0.2)'}}>
+          📘 Facebook
+        </a>
+      </div>
+
+      {/* Order Modal */}
+      {showOrder && !orderSuccess && (
+        <div style={{background:'rgba(0,0,0,0.5)',position:'fixed',top:0,left:0,right:0,bottom:0,zIndex:999,display:'flex',alignItems:'center',justifyContent:'center',padding:'16px'}}>
+          <div style={{background:'#1a2f1a',border:'1px solid rgba(255,255,255,0.1)',borderRadius:'20px',padding:'24px',width:'100%',maxWidth:'400px'}}>
+            <h3 style={{margin:'0 0 16px',fontSize:'18px',fontWeight:700}}>🛒 Đặt hàng</h3>
+            <p style={{color:'#c8a84b',fontWeight:700,marginBottom:'16px'}}>{item.ten_cay} — {Number(item.gia).toLocaleString('vi-VN')}đ</p>
+            {[{key:'ten',label:'Tên người nhận',ph:'Nguyễn Văn A'},{key:'sdt',label:'Số điện thoại',ph:'0901234567'},{key:'dia_chi',label:'Địa chỉ',ph:'123 Đường ABC, Cà Mau'}].map(f => (
+              <div key={f.key} style={{marginBottom:'12px'}}>
+                <label style={{fontSize:'12px',color:'rgba(255,255,255,0.6)',display:'block',marginBottom:'4px'}}>{f.label}</label>
+                <input value={orderForm[f.key as keyof typeof orderForm]} onChange={e => setOrderForm(p => ({...p, [f.key]: e.target.value}))}
+                  placeholder={f.ph}
+                  style={{width:'100%',padding:'10px 14px',border:'1px solid rgba(255,255,255,0.15)',borderRadius:'10px',background:'rgba(255,255,255,0.08)',color:'#fff',fontSize:'14px',outline:'none',boxSizing:'border-box'}} />
+              </div>
+            ))}
+            <div style={{marginBottom:'16px'}}>
+              <label style={{fontSize:'12px',color:'rgba(255,255,255,0.6)',display:'block',marginBottom:'8px'}}>Phương thức thanh toán</label>
+              <div style={{display:'flex',gap:'8px'}}>
+                {[{v:'cod',l:'🚚 COD'},{v:'chuyen_khoan',l:'🏦 Chuyển khoản'}].map(opt => (
+                  <button key={opt.v} onClick={() => setOrderForm(p => ({...p, phuong_thuc: opt.v}))}
+                    style={{flex:1,padding:'10px',borderRadius:'10px',border:'none',cursor:'pointer',fontWeight:600,fontSize:'13px',
+                      background: orderForm.phuong_thuc === opt.v ? '#c8a84b' : 'rgba(255,255,255,0.08)',
+                      color: orderForm.phuong_thuc === opt.v ? '#0e2d1a' : '#fff'}}>
+                    {opt.l}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div style={{display:'flex',gap:'8px'}}>
+              <button onClick={() => setShowOrder(false)}
+                style={{flex:1,padding:'12px',background:'rgba(255,255,255,0.08)',color:'#fff',border:'none',borderRadius:'12px',cursor:'pointer'}}>
+                Hủy
+              </button>
+              <button onClick={() => submitOrder(item)} disabled={ordering}
+                style={{flex:2,padding:'12px',background:'#c8a84b',color:'#0e2d1a',border:'none',borderRadius:'12px',fontWeight:700,cursor:'pointer'}}>
+                {ordering ? '⏳ Đang gửi...' : '✅ Xác nhận đặt hàng'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {orderSuccess && (
+        <div style={{background:'rgba(34,197,94,0.1)',border:'1px solid rgba(34,197,94,0.3)',borderRadius:'16px',padding:'20px',textAlign:'center',marginBottom:'16px'}}>
+          <div style={{fontSize:'40px',marginBottom:'8px'}}>🎉</div>
+          <p style={{fontWeight:700,color:'#4ade80'}}>Đặt hàng thành công!</p>
+          <p style={{fontSize:'13px',color:'rgba(255,255,255,0.6)'}}>Người bán sẽ liên hệ với bạn sớm nhất</p>
+        </div>
+      )}
+
+      {/* Comments */}
+      <div style={{marginTop:'16px'}}>
+        <h3 style={{fontSize:'15px',fontWeight:700,marginBottom:'12px'}}>💬 Bình luận ({comments.length})</h3>
+        <div style={{display:'flex',gap:'8px',marginBottom:'16px'}}>
+          <input value={newComment} onChange={e => setNewComment(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && submitComment()}
+            placeholder="Viết bình luận..."
+            style={{flex:1,padding:'10px 14px',border:'1px solid rgba(255,255,255,0.15)',borderRadius:'10px',background:'rgba(255,255,255,0.08)',color:'#fff',fontSize:'14px',outline:'none'}} />
+          <button onClick={submitComment} disabled={commenting}
+            style={{padding:'10px 16px',background:'#2d6b42',color:'#fff',border:'none',borderRadius:'10px',cursor:'pointer',fontWeight:600,fontSize:'13px'}}>
+            {commenting ? '...' : 'Gửi'}
+          </button>
+        </div>
+        <div style={{display:'flex',flexDirection:'column',gap:'8px',maxHeight:'300px',overflowY:'auto'}}>
+          {comments.length === 0 ? (
+            <p style={{color:'rgba(255,255,255,0.4)',fontSize:'13px',textAlign:'center',padding:'16px'}}>Chưa có bình luận nào</p>
+          ) : comments.map((cm, i) => (
+            <div key={i} style={{background:'rgba(255,255,255,0.05)',borderRadius:'10px',padding:'10px 14px'}}>
+              <div style={{display:'flex',justifyContent:'space-between',marginBottom:'4px'}}>
+                <span style={{fontWeight:600,fontSize:'13px',color:'#c8a84b'}}>{cm.user_name}</span>
+                <span style={{fontSize:'11px',color:'rgba(255,255,255,0.3)'}}>{new Date(cm.created_at).toLocaleDateString('vi-VN')}</span>
+              </div>
+              <p style={{margin:0,fontSize:'14px',color:'rgba(255,255,255,0.85)'}}>{cm.noi_dung}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )
