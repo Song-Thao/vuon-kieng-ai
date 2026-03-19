@@ -82,12 +82,19 @@ function useListingFeatures(listingId, currentUser) {
   const submitOrder = async (item) => {
     if (!orderForm.ten || !orderForm.sdt || !orderForm.dia_chi) { alert('Vui lòng điền đầy đủ thông tin!'); return }
     setOrdering(true)
+    const soCoc = orderForm.dat_coc !== '0' ? Math.round(item.gia * parseInt(orderForm.dat_coc) / 100) : 0
     await supabase.from('orders').insert({
       listing_id: listingId, buyer_id: currentUser?.id || null,
       seller_id: item.user_id, ten_nguoi_mua: orderForm.ten,
       sdt: orderForm.sdt, dia_chi: orderForm.dia_chi,
-      phuong_thuc: orderForm.phuong_thuc, gia: item.gia, trang_thai: 'pending'
+      phuong_thuc: orderForm.phuong_thuc, gia: item.gia,
+      so_tien_coc: soCoc, phan_tram_coc: parseInt(orderForm.dat_coc),
+      trang_thai: orderForm.phuong_thuc === 'chuyen_khoan' ? 'cho_xac_nhan' : 'pending'
     })
+    // Cap nhat trang thai listing
+    if (orderForm.phuong_thuc === 'chuyen_khoan' && orderForm.dat_coc !== '0') {
+      await supabase.from('listings').update({ trang_thai: 'dang_giao_dich' }).eq('id', listingId)
+    }
     setOrdering(false)
     setOrderSuccess(true)
   }
@@ -422,6 +429,8 @@ export default function Marketplace() {
                     <span className="text-xs text-gray-500">{item.vi_tri && `📍 ${item.vi_tri}`}</span>
                     <div className="flex gap-2">
                       {item.zalo && <span className="bg-blue-700 text-white text-xs px-2 py-1 rounded">Zalo</span>}
+                      {item.trang_thai === 'dang_giao_dich' && <span className="bg-yellow-600 text-white text-xs px-2 py-1 rounded">🔄 Đang GD</span>}
+                      {item.trang_thai === 'da_ban' && <span className="bg-red-700 text-white text-xs px-2 py-1 rounded">✅ Đã bán</span>}
                       {item.sdt && <span className="bg-green-800 text-white text-xs px-2 py-1 rounded">Gọi</span>}
                     </div>
                   </div>

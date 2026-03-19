@@ -14,8 +14,10 @@ export default function Admin() {
   const [user, setUser] = useState<any>(null)
   const [posts, setPosts] = useState<any[]>([])
   const [usersCount, setUsersCount] = useState<number>(0)
+  const [orders, setOrders] = useState<any[]>([])  
+  const [newOrderAlert, setNewOrderAlert] = useState(false)
   const [listings, setListings] = useState<any[]>([])
-  const [tab, setTab] = useState<'posts'|'listings'|'settings'>('posts')
+  const [tab, setTab] = useState<'posts'|'listings'|'settings'|'orders'>('posts')
   const [loading, setLoading] = useState(true)
   const [settings, setSettings] = useState<any>({
     banner_title: '', banner_content: '', banner_image: '', banner_link: '',
@@ -48,6 +50,35 @@ export default function Admin() {
     setUsersCount(Number(ucData?.total) || 0)
     setListings(l || [])
     setLoading(false)
+  }
+
+  const fetchOrders = async () => {
+    const { data } = await supabase.from('orders').select('*, listings(ten_cay, gia)').order('created_at', { ascending: false })
+    setOrders(data || [])
+  }
+
+  useEffect(() => {
+    const channel = supabase.channel('admin-orders')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'orders' },
+        (payload) => {
+          setOrders(prev => [payload.new, ...prev])
+          setNewOrderAlert(true)
+          setTimeout(() => setNewOrderAlert(false), 5000)
+        })
+      .subscribe()
+    fetchOrders()
+    return () => { supabase.removeChannel(channel) }
+  }, [])
+
+  const confirmOrder = async (id: string) => {
+    await supabase.from('orders').update({ trang_thai: 'da_xac_nhan' }).eq('id', id)
+    setOrders(prev => prev.map(o => o.id === id ? { ...o, trang_thai: 'da_xac_nhan' } : o))
+  }
+
+  const markSold = async (listingId: string, orderId: string) => {
+    await supabase.from('listings').update({ trang_thai: 'da_ban' }).eq('id', listingId)
+    await supabase.from('orders').update({ trang_thai: 'completed' }).eq('id', orderId)
+    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, trang_thai: 'completed' } : o))
   }
 
   const fetchSettings = async () => {
@@ -105,7 +136,12 @@ export default function Admin() {
           <Link href="/dashboard" className="text-gray-500 hover:text-gray-700 text-sm">← Dashboard</Link>
         </div>
 
-        {/* Stats */}
+        {newOrderAlert && (
+        <div className="fixed top-4 right-4 bg-green-600 text-white px-6 py-3 rounded-xl shadow-lg z-50 flex items-center gap-2">
+          🛒 Có đơn hàng mới!
+        </div>
+      )}
+      {/* Stats */}
         <div className="grid grid-cols-4 gap-4 mb-6">
           {[
             { label: 'Chờ duyệt', value: choDuyet.length, color: 'bg-yellow-50 text-yellow-700' },
@@ -125,6 +161,7 @@ export default function Admin() {
           {[
             { key: 'settings', label: '⚙️ Cài đặt' },
             { key: 'posts', label: `📝 Bài viết ${choDuyet.length > 0 ? `(${choDuyet.length})` : ''}` },
+            { key: 'orders', label: `🛒 Đơn hàng ${orders.filter(o=>o.trang_thai==='cho_xac_nhan').length > 0 ? `(${orders.filter(o=>o.trang_thai==='cho_xac_nhan').length})` : ''}` },
             { key: 'listings', label: '🌿 Tin đăng bán' },
           ].map(t => (
             <button key={t.key} onClick={() => setTab(t.key as any)}
@@ -328,6 +365,39 @@ export default function Admin() {
         )}
 
         {/* Listings Tab */}
+        {tab === 'orders' && (
+          <div className="space-y-3">
+            {orders.length === 0 ? (
+              <div className="text-center py-10 text-gray-400">Chưa có đơn hàng nào</div>
+            ) : orders.map(order => (
+              <div key={order.id} className="bg-white rounded-xl p-4 shadow-sm">
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2 flex-wrap">
+                      <span className={`text-xs px-2 py-1 rounded-full font-semibold ${order.trang_thai === 'completed' ? 'bg-green-100 text-green-700' : order.trang_thai === 'da_xac_nhan' ? 'bg-blue-100 text-blue-700' : order.trang_thai === 'cho_xac_nhan' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-600'}`}>
+                        {order.trang_thai === 'completed' ? '✅ Hoàn thành' : order.trang_thai === 'da_xac_nhan' ? '🚚 Đã xác nhận' : order.trang_thai === 'cho_xac_nhan' ? '⏳ Chờ xác nhận' : '📋 Mới'}
+                      </span>
+                      <span className="text-xs text-gray-400">{order.phuong_thuc === 'chuyen_khoan' ? '🏦 CK' : '🚚 COD'}</span>
+                    </div>
+                    <p className="font-semibold text-gray-800">{order.listings?.ten_cay}</p>
+                    <p className="text-sm text-gray-600">👤 {order.ten_nguoi_mua} · 📞 {order.sdt}</p>
+                    <p className="text-sm text-gray-500">📍 {order.dia_chi}</p>
+                    <p className="text-sm font-bold text-green-700">{Number(order.gia).toLocaleString('vi-VN')}đ {order.phan_tram_coc > 0 && `· Cọc ${order.phan_tram_coc}% = ${Number(order.so_tien_coc).toLocaleString('vi-VN')}đ`}</p>
+                    <p className="text-xs text-gray-400">{new Date(order.created_at).toLocaleString('vi-VN')}</p>
+                  </div>
+                  <div className="flex flex-col gap-2 ml-4">
+                    {order.trang_thai === 'cho_xac_nhan' && (
+                      <button onClick={() => confirmOrder(order.id)} className="text-xs bg-blue-600 text-white px-3 py-1.5 rounded-lg">✅ Xác nhận</button>
+                    )}
+                    {order.trang_thai === 'da_xac_nhan' && (
+                      <button onClick={() => markSold(order.listing_id, order.id)} className="text-xs bg-green-600 text-white px-3 py-1.5 rounded-lg">🎉 Đã bán</button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
         {tab === 'listings' && (
           <div className="space-y-3">
             {listings.map(item => (
