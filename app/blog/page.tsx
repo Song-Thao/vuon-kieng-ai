@@ -46,7 +46,7 @@ export default function Blog() {
   return (
     <div className="min-h-screen" style={getBgStyle()}>
       {/* Header */}
-      <div className="bg-green-900 text-white py-12 px-4">
+      <div className="bg-green-900/60 text-white py-12 px-4">
         <div className="max-w-5xl mx-auto">
           <h1 className="text-3xl font-bold mb-2">📚 Wiki Cây Cảnh Việt Nam</h1>
           <p className="text-green-200 mb-6">Kiến thức từ cộng đồng — Bonsai, chăm sóc, bệnh cây, thị trường</p>
