@@ -84,9 +84,9 @@ export default function Dashboard() {
 
   if (!user) return null
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--warm-white)' }}>
+    <div style={{ minHeight: '100vh', background: 'transparent' }}>
       {/* Nav */}
-      <nav style={{ background: 'var(--forest)', padding: '0 28px', height: '56px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100 }}>
+      <nav style={{ background: 'rgba(14,45,26,0.85)', padding: '0 28px', height: '56px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--gold)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px' }}>🌿</div>
           <span style={{ color: '#fff', fontFamily: "'Playfair Display', serif", fontSize: '18px', fontWeight: 600 }}>Vườn Kiểng AI</span>
