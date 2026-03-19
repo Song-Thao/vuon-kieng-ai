@@ -67,7 +67,7 @@ export default function Home() {
   )
 
   return (
-    <div style={{minHeight:'100vh',color:'#fff',fontFamily:"'DM Sans',sans-serif",background:'#0a1f0f',overflowX:'hidden'}}>
+    <div style={{minHeight:'100vh',color:'#fff',fontFamily:"'DM Sans',sans-serif",background:'transparent',overflowX:'hidden'}}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@400;500;600&display=swap');
         *{box-sizing:border-box;margin:0;padding:0;}

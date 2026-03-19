@@ -57,7 +57,7 @@ export default function ChanDoan() {
   return (
     <>
       <style>{`
-        .cd-wrap { min-height:100vh; background:#0e2d1a; font-family:'DM Sans',sans-serif; color:#f0ede6; }
+        .cd-wrap { min-height:100vh; background:transparent; font-family:'DM Sans',sans-serif; color:#f0ede6; }
         .cd-hero { background:linear-gradient(135deg,rgba(26,68,40,0.85),rgba(14,45,26,0.85)); padding:40px 24px 32px; text-align:center; position:relative; overflow:hidden; }
         .cd-hero::before { content:''; position:absolute; inset:0; background-image:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.015) 40px,rgba(255,255,255,0.015) 41px); }
         .cd-hero-badge { display:inline-block; background:rgba(200,168,75,0.15); border:1px solid rgba(200,168,75,0.3); color:var(--gold); font-size:11px; font-weight:600; letter-spacing:2px; text-transform:uppercase; padding:6px 16px; border-radius:20px; margin-bottom:16px; position:relative; }
