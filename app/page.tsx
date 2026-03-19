@@ -177,8 +177,8 @@ export default function Home() {
 
       {/* HERO */}
       <div className="hero-section" style={{paddingTop:'64px'}}>
-        <div style={{position:'absolute',inset:0,backgroundImage:`url('${heroBg}')`,backgroundSize:'cover',backgroundPosition:'center',filter:`brightness(${0.55-overlayOpacity*0.15}) saturate(0.9)`}}/>
-        <div style={{position:'absolute',inset:0,background:`linear-gradient(135deg,rgba(10,31,15,${0.3+overlayOpacity*0.4}) 0%,rgba(10,31,15,${overlayOpacity*0.15}) 50%,rgba(10,31,15,${0.35+overlayOpacity*0.4}) 100%)`}}/>
+        <div style={{position:'absolute',inset:0,backgroundImage:`url('${heroBg}')`,backgroundSize:'cover',backgroundPosition:'center',filter:`brightness(0.5) saturate(0.9)`}}/>
+        <div style={{position:'absolute',inset:0,background:`linear-gradient(135deg,rgba(10,31,15,${overlayOpacity*0.9}) 0%,rgba(10,31,15,${overlayOpacity*0.3}) 50%,rgba(10,31,15,${overlayOpacity*0.9}) 100%)`}}/>
         <div className="hero-content">
           <div style={{maxWidth:'1280px',margin:'0 auto',padding:'70px 28px'}}>
             {/* Banner admin */}
