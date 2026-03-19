@@ -143,7 +143,7 @@ function ListingModal({ item, onClose }: { item: any, onClose: () => void }) {
         <div className="mb-4">
           {/* Main display */}
           {activeVideo ? (
-            <iframe src={activeVideo} className="w-full rounded-xl mb-2" style={{height:'280px'}} allowFullScreen />
+            <iframe src={activeVideo} className="w-full rounded-xl mb-2" style={{height:'280px'}} allowFullScreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" referrerPolicy="strict-origin-when-cross-origin" />
           ) : imgs.length > 0 ? (
             <img src={imgs[activeImg]} onClick={() => setLightbox(imgs[activeImg])} className="w-full rounded-xl mb-2 cursor-zoom-in" style={{maxHeight:'360px',objectFit:'contain',background:'#111'}} />
           ) : null}
@@ -179,7 +179,7 @@ function ListingModal({ item, onClose }: { item: any, onClose: () => void }) {
             const ytEmbed = getYoutubeEmbed(url)
             return ytEmbed ? (
               <div key={i} className="mb-3 rounded-xl overflow-hidden">
-                <iframe className="w-full aspect-video" src={ytEmbed} allowFullScreen />
+                <iframe className="w-full aspect-video" src={ytEmbed} allowFullScreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" referrerPolicy="strict-origin-when-cross-origin" />
               </div>
             ) : isFacebookVideo(url) ? (
               <a key={i} href={url} target="_blank" rel="noopener noreferrer"
