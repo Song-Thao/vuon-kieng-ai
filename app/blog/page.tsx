@@ -91,7 +91,7 @@ export default function Blog() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map(post => (
               <Link key={post.id} href={`/blog/${post.slug || post.id}`}
-                className="rounded-xl overflow-hidden transition" style="background:rgba(14,45,26,0.88);border:1px solid rgba(255,255,255,0.12)">
+                className="rounded-xl overflow-hidden transition" style={{background:"rgba(14,45,26,0.88)",border:"1px solid rgba(255,255,255,0.12)"}}>
                 {post.hinh_dai_dien ? (
                   <img src={post.hinh_dai_dien} alt={post.tieu_de} className="w-full h-48 object-cover" />
                 ) : (
