@@ -43,6 +43,11 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
           background-color: ${bgColor} !important;
           ${bgImage ? `background-image: url('${bgImage}'); background-size: cover; background-position: center; background-attachment: fixed;` : ''}
         }
+        @media (max-width: 768px) {
+          body {
+            background-attachment: scroll !important;
+          }
+        }
         body::before {
           content: '';
           position: fixed;
