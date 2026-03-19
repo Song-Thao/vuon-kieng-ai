@@ -116,7 +116,7 @@ export default function DocBai() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       {/* Header ảnh */}
       {post.hinh_dai_dien && (
         <div className="w-full h-64 overflow-hidden">

@@ -46,7 +46,7 @@ export default function Blog() {
   return (
     <div className="min-h-screen" style={getBgStyle()}>
       {/* Header */}
-      <div className="bg-transparent text-white py-12 px-4">
+      <div className="bg-green-900/80 text-white py-12 px-4">
         <div className="max-w-5xl mx-auto">
           <h1 className="text-3xl font-bold mb-2">📚 Wiki Cây Cảnh Việt Nam</h1>
           <p className="text-green-200 mb-6">Kiến thức từ cộng đồng — Bonsai, chăm sóc, bệnh cây, thị trường</p>
@@ -91,22 +91,22 @@ export default function Blog() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map(post => (
               <Link key={post.id} href={`/blog/${post.slug || post.id}`}
-                className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition border border-gray-100">
+                className="rounded-xl overflow-hidden transition" style="background:rgba(14,45,26,0.88);border:1px solid rgba(255,255,255,0.12)">
                 {post.hinh_dai_dien ? (
                   <img src={post.hinh_dai_dien} alt={post.tieu_de} className="w-full h-48 object-cover" />
                 ) : (
-                  <div className="w-full h-48 bg-green-50 flex items-center justify-center text-5xl">🌿</div>
+                  <div className="w-full h-48 flex items-center justify-center text-5xl" style={{background:"rgba(14,45,26,0.6)"}}>🌿</div>
                 )}
                 <div className="p-4">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                    <span className="text-xs px-2 py-1 rounded-full" style={{background:"rgba(200,168,75,0.2)",color:"#c8a84b"}}>
                       {CATEGORIES.find(c => c.value === post.the_loai)?.label || post.the_loai}
                     </span>
-                    {post.ai_viet && <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">🤖 AI</span>}
+                    {post.ai_viet && <span className="text-xs px-2 py-1 rounded-full" style={{background:"rgba(59,130,246,0.2)",color:"#93c5fd"}}>🤖 AI</span>}
                   </div>
-                  <h3 className="font-bold text-gray-800 mb-2 line-clamp-2">{post.tieu_de}</h3>
-                  {post.tom_tat && <p className="text-gray-500 text-sm line-clamp-3">{post.tom_tat}</p>}
-                  <div className="flex justify-between items-center mt-3 text-xs text-gray-400">
+                  <h3 className="font-bold mb-2 line-clamp-2" style={{color:"#fff"}}>{post.tieu_de}</h3>
+                  {post.tom_tat && <p className="text-sm line-clamp-3" style={{color:"rgba(255,255,255,0.6)"}}>{post.tom_tat}</p>}
+                  <div className="flex justify-between items-center mt-3 text-xs" style={{color:"rgba(255,255,255,0.45)"}}>
                     <span>👁️ {post.luot_xem} lượt xem</span>
                     <span>❤️ {post.luot_like} thích</span>
                   </div>
