@@ -80,7 +80,7 @@ export default function Home() {
         .gold-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(200,168,75,0.4);}
         .outline-btn{background:rgba(255,255,255,0.08);color:#fff;padding:13px 32px;border-radius:30px;text-decoration:none;font-size:15px;font-weight:600;border:1px solid rgba(255,255,255,0.2);display:inline-block;transition:all 0.3s;}
         .outline-btn:hover{background:rgba(255,255,255,0.15);transform:translateY(-2px);}
-        .stat-card{background:rgba(255,255,255,0.08);backdrop-filter:blur(12px);border:1px solid rgba(200,168,75,0.25);border-radius:14px;padding:16px 20px;text-align:center;transition:all 0.3s;}
+        .stat-card{background:rgba(14,45,26,0.85);border:1px solid rgba(200,168,75,0.3);border-radius:14px;padding:16px 20px;text-align:center;transition:all 0.3s;}
         .stat-card:hover{transform:translateY(-3px);border-color:rgba(200,168,75,0.5);}
         .tool-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;text-decoration:none;display:flex;align-items:flex-start;gap:14px;transition:all 0.3s;color:#fff;}
         .tool-card:hover{background:rgba(255,255,255,0.09);transform:translateY(-3px);border-color:rgba(200,168,75,0.3);}
@@ -315,7 +315,7 @@ export default function Home() {
       )}
 
       {/* CÔNG CỤ - desktop full row */}
-      <div style={{background:'rgba(0,0,0,0.15)',borderTop:'1px solid rgba(255,255,255,0.06)',padding:'56px 28px'}}>
+      <div style={{background:'rgba(10,31,15,0.7)',borderTop:'1px solid rgba(255,255,255,0.06)',padding:'56px 28px'}}>
         <div style={{maxWidth:'1280px',margin:'0 auto'}}>
           <div style={{textAlign:'center',marginBottom:'36px'}}>
             <div className="badge">✨ Tính năng nổi bật</div>
@@ -329,7 +329,7 @@ export default function Home() {
               {icon:'📚',title:'Wiki cây cảnh',desc:'Kiến thức từ cộng đồng — Bonsai, chăm sóc, bệnh cây',href:'/blog',color:'#8b5cf6'},
               {icon:'✂️',title:'Định hướng dáng thế',desc:'AI gợi ý dáng thế + Bonsai Editor kéo thả cành miễn phí',href:'/phai-dinh-huong',color:'#ec4899'},
             ].map((f,i)=>(
-              <Link key={i} href={f.href} style={{background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.08)',borderRadius:'18px',padding:'24px',textDecoration:'none',display:'block',transition:'all 0.3s'}}
+              <Link key={i} href={f.href} style={{background:'rgba(14,45,26,0.85)',border:'1px solid rgba(255,255,255,0.15)',borderRadius:'18px',padding:'24px',textDecoration:'none',display:'block',transition:'all 0.3s'}}
                 onMouseEnter={e=>{const el=e.currentTarget as HTMLElement;el.style.background='rgba(255,255,255,0.08)';el.style.transform='translateY(-4px)';el.style.borderColor='rgba(200,168,75,0.3)';}}
                 onMouseLeave={e=>{const el=e.currentTarget as HTMLElement;el.style.background='rgba(255,255,255,0.04)';el.style.transform='translateY(0)';el.style.borderColor='rgba(255,255,255,0.08)';}}>
                 <div style={{width:'50px',height:'50px',borderRadius:'14px',background:`${f.color}22`,border:`1px solid ${f.color}44`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'24px',marginBottom:'14px'}}>{f.icon}</div>
@@ -350,7 +350,7 @@ export default function Home() {
           </div>
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:'18px'}} className="posts-grid">
             {posts.map((post,i)=>(
-              <Link key={i} href={'/blog/'+(post.slug||post.id)} style={{background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.08)',borderRadius:'18px',overflow:'hidden',textDecoration:'none',display:'block',transition:'all 0.3s'}}
+              <Link key={i} href={'/blog/'+(post.slug||post.id)} style={{background:'rgba(14,45,26,0.85)',border:'1px solid rgba(255,255,255,0.15)',borderRadius:'18px',overflow:'hidden',textDecoration:'none',display:'block',transition:'all 0.3s'}}
                 onMouseEnter={e=>{const el=e.currentTarget as HTMLElement;el.style.transform='translateY(-4px)';el.style.borderColor='rgba(200,168,75,0.3)';}}
                 onMouseLeave={e=>{const el=e.currentTarget as HTMLElement;el.style.transform='translateY(0)';el.style.borderColor='rgba(255,255,255,0.08)';}}>
                 {post.hinh_dai_dien?<img src={post.hinh_dai_dien} alt={post.tieu_de||'Bài viết'} loading="lazy" style={{width:'100%',height:'175px',objectFit:'cover'}}/>:<div style={{width:'100%',height:'175px',background:'linear-gradient(135deg,rgba(45,107,66,0.3),rgba(200,168,75,0.1))',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'44px'}}>📝</div>}
@@ -377,7 +377,7 @@ export default function Home() {
       </div>
 
       {/* FOOTER */}
-      <footer style={{borderTop:'1px solid rgba(255,255,255,0.08)',padding:'48px 28px',background:'rgba(0,0,0,0.2)'}}>
+      <footer style={{borderTop:'1px solid rgba(255,255,255,0.08)',padding:'48px 28px',background:'rgba(10,31,15,0.7)'}}>
         <div style={{maxWidth:'1280px',margin:'0 auto',display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(200px,1fr))',gap:'32px'}}>
           <div>
             <div style={{display:'flex',alignItems:'center',gap:'8px',marginBottom:'14px'}}>
