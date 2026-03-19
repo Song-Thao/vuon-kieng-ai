@@ -129,19 +129,19 @@ export default function Dashboard() {
         {/* Stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '14px', marginBottom: '28px' }}>
           {stats.map((s, i) => (
-            <div key={i} style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '16px', padding: '20px' }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: '#eaf3de', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', marginBottom: '12px' }}>{s.icon}</div>
+            <div key={i} style={{ background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '16px', padding: '20px' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(200,168,75,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', marginBottom: '12px' }}>{s.icon}</div>
               <div style={{ fontFamily: "'Playfair Display', serif", fontSize: '26px', fontWeight: 700, color: s.accent, lineHeight: 1 }}>{s.value}</div>
-              <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>{s.label}</div>
+              <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', marginTop: '4px' }}>{s.label}</div>
             </div>
           ))}
         </div>
 
         {/* Quick actions */}
-        <p style={{ fontFamily: "'Playfair Display', serif", fontSize: '18px', fontWeight: 600, color: 'var(--forest)', marginBottom: '16px' }}>Truy cập nhanh</p>
+        <p style={{ fontFamily: "'Playfair Display', serif", fontSize: '18px', fontWeight: 600, color: '#c8a84b', marginBottom: '16px' }}>Truy cập nhanh</p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '14px', marginBottom: '32px' }}>
           {ACTIONS.map((a, i) => (
-            <Link key={i} href={a.href} style={{ background: i === 0 ? 'linear-gradient(135deg,#2d6b42,#0e2d1a)' : 'var(--forest)', borderRadius: '16px', padding: '24px', textDecoration: 'none', display: 'block', position: 'relative' }}>
+            <Link key={i} href={a.href} style={{ background: i === 0 ? 'linear-gradient(135deg,rgba(45,107,66,0.7),rgba(14,45,26,0.7))' : 'rgba(14,45,26,0.5)', borderRadius: '16px', padding: '24px', textDecoration: 'none', display: 'block', position: 'relative' }}>
               <div style={{ fontSize: '28px', marginBottom: '14px' }}>{a.icon}</div>
               <div style={{ position: 'absolute', top: '20px', right: '20px', color: 'rgba(255,255,255,0.3)', fontSize: '18px' }}>↗</div>
               <div style={{ color: '#fff', fontSize: '15px', fontWeight: 600, marginBottom: '6px' }}>{a.label}</div>
@@ -151,25 +151,25 @@ export default function Dashboard() {
         </div>
 
         {/* Vườn của bạn */}
-        <p style={{ fontFamily: "'Playfair Display', serif", fontSize: '18px', fontWeight: 600, color: 'var(--forest)', marginBottom: '16px' }}>Vườn của bạn</p>
-        <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '16px', padding: '20px' }}>
+        <p style={{ fontFamily: "'Playfair Display', serif", fontSize: '18px', fontWeight: 600, color: '#c8a84b', marginBottom: '16px' }}>Vườn của bạn</p>
+        <div style={{ background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '16px', padding: '20px' }}>
           {loading ? (
-            <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '20px' }}>Đang tải...</div>
+            <div style={{ textAlign: 'center', color: 'rgba(255,255,255,0.5)', padding: '20px' }}>Đang tải...</div>
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '12px' }}>
               {passports.map((p, i) => {
                 const st = STATUS_MAP[p.trang_thai] || STATUS_MAP.khoe_manh
                 const vis = VISIBILITY_MAP[p.visibility_mode] || VISIBILITY_MAP.public
                 return (
-                  <Link key={i} href="/passport" style={{ border: '1px solid var(--border)', borderRadius: '12px', padding: '16px', textDecoration: 'none', display: 'block', position: 'relative' }}>
+                  <Link key={i} href="/passport" style={{ border: '1px solid rgba(255,255,255,0.12)', borderRadius: '12px', padding: '16px', background: 'rgba(255,255,255,0.06)', textDecoration: 'none', display: 'block', position: 'relative' }}>
                     <div style={{ position: 'absolute', top: '10px', right: '10px', fontSize: '14px' }}>{vis.icon}</div>
                     {p.hinh_anh ? (
                       <img src={p.hinh_anh} style={{ width: '100%', height: '80px', objectFit: 'cover', borderRadius: '8px', marginBottom: '8px' }} />
                     ) : (
                       <div style={{ fontSize: '32px', marginBottom: '8px' }}>🌳</div>
                     )}
-                    <div style={{ fontFamily: "'Playfair Display', serif", fontSize: '14px', fontWeight: 600, color: 'var(--forest)' }}>{p.ten_cay}</div>
-                    <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
+                    <div style={{ fontFamily: "'Playfair Display', serif", fontSize: '14px', fontWeight: 600, color: '#c8a84b' }}>{p.ten_cay}</div>
+                    <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', marginTop: '2px' }}>
                       {p.tuoi_cay && `${p.tuoi_cay} · `}{p.xuat_xu || ''}
                     </div>
                     <div style={{ marginTop: '8px' }}>
@@ -178,7 +178,7 @@ export default function Dashboard() {
                   </Link>
                 )
               })}
-              <Link href="/passport" style={{ border: '1.5px dashed var(--border)', borderRadius: '12px', padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '120px', textDecoration: 'none', color: 'var(--text-muted)' }}>
+              <Link href="/passport" style={{ border: '1.5px dashed var(--border)', borderRadius: '12px', padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '120px', textDecoration: 'none', color: 'rgba(255,255,255,0.5)' }}>
                 <div style={{ fontSize: '28px', marginBottom: '6px', color: 'var(--border)' }}>＋</div>
                 <div style={{ fontSize: '13px' }}>Thêm cây mới</div>
               </Link>
