@@ -105,13 +105,13 @@ function useListingFeatures(listingId, currentUser) {
 function getYoutubeEmbed(url: string) {
   if (!url) return null
   // Embed URL trực tiếp
-  if (url.includes('youtube.com/embed/')) return url
+  if (url.includes('youtube.com/embed/')) return url.replace('youtube.com/embed/', 'youtube-nocookie.com/embed/')
   // Watch URL
   const yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/)
-  if (yt) return `https://www.youtube.com/embed/${yt[1]}`
+  if (yt) return `https://www.youtube-nocookie.com/embed/${yt[1]}?rel=0`
   // Shorts
   const shorts = url.match(/youtube\.com\/shorts\/([^&\s]+)/)
-  if (shorts) return `https://www.youtube.com/embed/${shorts[1]}`
+  if (shorts) return `https://www.youtube-nocookie.com/embed/${shorts[1]}?rel=0`
   return null
 }
 function isFacebookVideo(url: string) {
