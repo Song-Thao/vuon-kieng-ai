@@ -22,7 +22,6 @@ export default function Admin() {
   const [settings, setSettings] = useState<any>({
     banner_title: '', banner_content: '', banner_image: '', banner_link: '',
     hero_title: 'Vườn Kiểng AI', hero_subtitle: 'Chợ bonsai & cây cảnh toàn quốc', hero_desc: 'AI chẩn đoán bệnh cây · Hộ chiếu điện tử minh bạch · Chợ cây xác thực · Wiki cây cảnh từ cộng đồng', hero_bg_image: '',
-    hero_title: '', hero_subtitle: '', hero_bg_image: '',
     bg_color: '#0e2d1a', bg_image: '', bg_overlay: '0.5', primary_color: '#c8a84b', secondary_color: '#2d6b42',
     bank_name: '', bank_account: '', bank_holder: '', bank_bin: '', momo_number: '',
     listing_fee: '0', commission_percent: '0'

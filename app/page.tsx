@@ -55,7 +55,7 @@ export default function Home() {
   }
 
   const heroBg = cfg.hero_bg_image ||
-    'https://images.unsplash.com/photo-1599598425947-5202edd56bdb?w=1600&q=80'
+    'https://images.pexels.com/photos/1302305/pexels-photo-1302305.jpeg?auto=compress&cs=tinysrgb&w=1600'
   const overlayOpacity = parseFloat(cfg.bg_overlay || '0.5')
 
   if (loading) return (
