@@ -28,6 +28,7 @@ function ListingModal({ item, onClose }: { item: any, onClose: () => void }) {
   const { getBgStyle } = useTheme()
   const [activeImg, setActiveImg] = useState(0)
   const [activeVideo, setActiveVideo] = useState<string|null>(null)
+  const [lightbox, setLightbox] = useState<string|null>(null)
   const imgs = [item.hinh_anh, item.hinh_anh_2, item.hinh_anh_3, item.hinh_anh_4, item.hinh_anh_5].filter(Boolean)
   const videos = [item.video_url, item.video_url_2, item.video_url_3].filter(Boolean)
   const ytVideos = videos.map(v => getYoutubeEmbed(v)).filter(Boolean)
@@ -45,7 +46,7 @@ function ListingModal({ item, onClose }: { item: any, onClose: () => void }) {
           {activeVideo ? (
             <iframe src={activeVideo} className="w-full rounded-xl mb-2" style={{height:'280px'}} allowFullScreen />
           ) : imgs.length > 0 ? (
-            <img src={imgs[activeImg]} className="w-full h-72 object-cover rounded-xl mb-2" />
+            <img src={imgs[activeImg]} onClick={() => setLightbox(imgs[activeImg])} className="w-full rounded-xl mb-2 cursor-zoom-in" style={{maxHeight:'360px',objectFit:'contain',background:'#111'}} />
           ) : null}
           {/* Thumbnails row */}
           <div className="flex gap-2 overflow-x-auto pb-1">
