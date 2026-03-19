@@ -47,7 +47,7 @@ export default function Login() {
       if (!password) return setMsg('Vui lòng nhập mật khẩu!')
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) setMsg('Lỗi: ' + error.message)
-      else window.location.href = '/dashboard'
+      else window.location.href = '/'
     }
     setLoading(false)
   }
