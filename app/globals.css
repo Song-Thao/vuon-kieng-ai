@@ -175,3 +175,24 @@ h1, h2, h3, .font-display {
 @media (max-width: 640px) {
   .hide-on-mobile { display: none !important; }
 }
+
+/* ThemeProvider - transparent backgrounds để lộ ảnh nền */
+.bg-green-900 { background-color: rgba(20, 83, 45, 0.75) !important; }
+.bg-gray-800 { background-color: rgba(31, 41, 55, 0.75) !important; }
+.bg-gray-700 { background-color: rgba(55, 65, 81, 0.7) !important; }
+.bg-white { background-color: rgba(255, 255, 255, 0.08) !important; }
+.bg-gray-50 { background-color: rgba(249, 250, 251, 0.06) !important; }
+.bg-green-50 { background-color: rgba(240, 253, 244, 0.06) !important; }
+
+/* Các div wrapper chính - trong suốt */
+div[style*="background: rgb(14, 45, 26)"],
+div[style*="background:#0e2d1a"],
+div[style*="background: #0e2d1a"] {
+  background: transparent !important;
+}
+
+/* cd-hero trong suốt */
+.cd-hero {
+  background: rgba(26, 68, 40, 0.6) !important;
+  backdrop-filter: blur(4px);
+}
