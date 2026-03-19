@@ -116,7 +116,7 @@ export default function DocBai() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen" style={{color:"#fff"}}>
       {/* Header ảnh */}
       {post.hinh_dai_dien && (
         <div className="w-full h-64 overflow-hidden">
@@ -125,23 +125,23 @@ export default function DocBai() {
       )}
 
       <div className="max-w-3xl mx-auto px-4 py-8">
-        <Link href="/blog" className="text-green-700 hover:underline text-sm">← Về Blog</Link>
+        <Link href="/blog" className="hover:underline text-sm" style={{color:"#c8a84b"}}>← Về Blog</Link>
 
-        <div className="bg-white rounded-2xl p-8 shadow-sm mt-4">
+        <div className="rounded-2xl p-8 mt-4" style={{background:"rgba(14,45,26,0.88)",border:"1px solid rgba(255,255,255,0.12)"}}>
           <div className="flex items-center gap-2 mb-4">
-            <span className="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full">{post.the_loai}</span>
-            {post.ai_viet && <span className="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full">🤖 AI hỗ trợ</span>}
+            <span className="text-xs px-3 py-1 rounded-full" style={{background:"rgba(200,168,75,0.2)",color:"#c8a84b"}}>{post.the_loai}</span>
+            {post.ai_viet && <span className="text-xs px-3 py-1 rounded-full" style={{background:"rgba(59,130,246,0.2)",color:"#93c5fd"}}>🤖 AI hỗ trợ</span>}
           </div>
 
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">{post.tieu_de}</h1>
+          <h1 className="text-2xl font-bold mb-4" style={{color:"#fff"}}>{post.tieu_de}</h1>
 
           {post.tom_tat && (
-            <div className="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded-r-xl">
-              <p className="text-green-800 italic">{post.tom_tat}</p>
+            <div className="border-l-4 border-green-500 p-4 mb-6 rounded-r-xl" style={{background:"rgba(45,107,66,0.3)"}}>
+              <p className="italic" style={{color:"#a8d5b5"}}>{post.tom_tat}</p>
             </div>
           )}
 
-          <div className="prose max-w-none">
+          <div className="prose max-w-none prose-invert" style={{color:"rgba(255,255,255,0.85)"}}>
             {renderContent(post.noi_dung || '')}
           </div>
 
