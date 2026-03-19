@@ -196,6 +196,23 @@ export default function Admin() {
                   </div>
                 ))}
                 {settings.hero_bg_image && <img src={settings.hero_bg_image} className="mt-2 rounded-lg h-24 w-full object-cover" alt="hero preview" />}
+                <div>
+                  <label className="text-sm text-gray-500">📁 Upload ảnh nền Hero từ máy</label>
+                  <label className="mt-1 flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg text-sm cursor-pointer hover:bg-green-700 w-fit">
+                    📁 Chọn ảnh upload
+                    <input type="file" accept="image/*" className="hidden" onChange={async e => {
+                      const file = e.target.files?.[0]
+                      if (!file) return
+                      const ext = file.name.split('.').pop()
+                      const path = `hero/${Date.now()}.${ext}`
+                      const { data, error } = await supabase.storage.from('images').upload(path, file, { upsert: true })
+                      if (!error) {
+                        const { data: urlData } = supabase.storage.from('images').getPublicUrl(path)
+                        setSettings(s => ({...s, hero_bg_image: urlData.publicUrl}))
+                      } else { alert('Loi upload: ' + error.message) }
+                    }} />
+                  </label>
+                </div>
               </div>
               <h3 className="font-bold text-gray-800 mb-4">🖼️ Banner Dashboard</h3>
               <div className="space-y-3">
