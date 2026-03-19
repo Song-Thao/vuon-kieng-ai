@@ -58,19 +58,19 @@ export default function ChanDoan() {
     <>
       <style>{`
         .cd-wrap { min-height:100vh; background:transparent; font-family:'DM Sans',sans-serif; color:#f0ede6; }
-        .cd-hero { background:linear-gradient(135deg,rgba(26,68,40,0.7),rgba(14,45,26,0.7)); padding:40px 24px 32px; text-align:center; position:relative; overflow:hidden; }
+        .cd-hero { background:linear-gradient(135deg,rgba(26,68,40,0.35),rgba(14,45,26,0.35)); padding:40px 24px 32px; text-align:center; position:relative; overflow:hidden; }
         .cd-hero::before { content:''; position:absolute; inset:0; background-image:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.015) 40px,rgba(255,255,255,0.015) 41px); }
         .cd-hero-badge { display:inline-block; background:rgba(200,168,75,0.15); border:1px solid rgba(200,168,75,0.3); color:var(--gold); font-size:11px; font-weight:600; letter-spacing:2px; text-transform:uppercase; padding:6px 16px; border-radius:20px; margin-bottom:16px; position:relative; }
         .cd-hero h1 { font-family:'Playfair Display',serif; font-size:clamp(26px,6vw,38px); font-weight:700; color:#f0ede6; line-height:1.2; margin-bottom:8px; position:relative; }
         .cd-hero h1 span { color:#a8d5b5; }
         .cd-hero p { color:rgba(184,212,190,0.7); font-size:14px; position:relative; }
         .cd-body { max-width:640px; margin:0 auto; padding:0 16px 60px; }
-        .cd-card { background:rgba(26,58,30,0.5); border:1px solid rgba(127,184,138,0.15); border-radius:20px; padding:24px; margin-top:20px; }
+        .cd-card { background:rgba(26,58,30,0.25); border:1px solid rgba(127,184,138,0.15); border-radius:20px; padding:24px; margin-top:20px; }
         .cd-card-title { font-family:'Playfair Display',serif; font-size:16px; color:#a8d5b5; margin-bottom:20px; display:flex; align-items:center; gap:8px; }
         .cd-card-title::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,rgba(127,184,138,0.3),transparent); }
         .cd-field { margin-bottom:16px; }
         .cd-field label { display:flex; align-items:center; gap:6px; font-size:12px; font-weight:500; color:rgba(184,212,190,0.8); letter-spacing:0.5px; margin-bottom:8px; text-transform:uppercase; }
-        .cd-field input, .cd-field textarea { width:100%; background:rgba(13,31,15,0.6); border:1px solid rgba(127,184,138,0.2); border-radius:12px; padding:12px 16px; color:#f0ede6; font-family:'DM Sans',sans-serif; font-size:14px; transition:all 0.2s; outline:none; }
+        .cd-field input, .cd-field textarea { width:100%; background:rgba(13,31,15,0.35); border:1px solid rgba(127,184,138,0.2); border-radius:12px; padding:12px 16px; color:#f0ede6; font-family:'DM Sans',sans-serif; font-size:14px; transition:all 0.2s; outline:none; }
         .cd-field input::placeholder, .cd-field textarea::placeholder { color:rgba(184,212,190,0.3); font-size:13px; }
         .cd-field input:focus, .cd-field textarea:focus { border-color:rgba(127,184,138,0.5); box-shadow:0 0 0 3px rgba(127,184,138,0.08); }
         .cd-field textarea { height:90px; resize:vertical; }
