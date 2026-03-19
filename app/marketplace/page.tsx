@@ -17,7 +17,17 @@ function useListingFeatures(listingId, currentUser) {
   const [newComment, setNewComment] = useState('')
   const [commenting, setCommenting] = useState(false)
   const [showOrder, setShowOrder] = useState(false)
-  const [orderForm, setOrderForm] = useState({ ten: '', sdt: '', dia_chi: '', phuong_thuc: 'cod' })
+  const [orderForm, setOrderForm] = useState({ ten: '', sdt: '', dia_chi: '', phuong_thuc: 'cod', dat_coc: '0' })
+  const [bankInfo, setBankInfo] = useState<any>({})
+
+  useEffect(() => {
+    supabase.from('admin_settings').select('*').in('key', ['bank_name','bank_account','bank_holder','bank_bin'])
+      .then(({ data }) => {
+        const obj: any = {}
+        data?.forEach(r => { obj[r.key] = r.value })
+        setBankInfo(obj)
+      })
+  }, [])
   const [ordering, setOrdering] = useState(false)
   const [orderSuccess, setOrderSuccess] = useState(false)
   const [copied, setCopied] = useState(false)
@@ -234,6 +244,27 @@ function ListingModal({ item, onClose }: { item: any, onClose: () => void }) {
                   style={{width:'100%',padding:'10px 14px',border:'1px solid rgba(255,255,255,0.15)',borderRadius:'10px',background:'rgba(255,255,255,0.08)',color:'#fff',fontSize:'14px',outline:'none',boxSizing:'border-box'}} />
               </div>
             ))}
+            {/* Dat coc */}
+            <div style={{marginBottom:'12px'}}>
+              <label style={{fontSize:'12px',color:'rgba(255,255,255,0.6)',display:'block',marginBottom:'8px'}}>💵 Đặt cọc trước (tùy chọn)</label>
+              <div style={{display:'flex',gap:'6px',flexWrap:'wrap'}}>
+                {[{v:'0',l:'Không cọc'},{v:'10',l:'10%'},{v:'20',l:'20%'},{v:'30',l:'30%'},{v:'50',l:'50%'}].map(opt => (
+                  <button key={opt.v} onClick={() => setOrderForm(p => ({...p, dat_coc: opt.v}))}
+                    style={{padding:'8px 14px',borderRadius:'20px',border:'none',cursor:'pointer',fontWeight:600,fontSize:'12px',
+                      background: orderForm.dat_coc === opt.v ? '#c8a84b' : 'rgba(255,255,255,0.08)',
+                      color: orderForm.dat_coc === opt.v ? '#0e2d1a' : '#fff'}}>
+                    {opt.l}
+                  </button>
+                ))}
+              </div>
+              {orderForm.dat_coc !== '0' && (
+                <div style={{marginTop:'10px',background:'rgba(200,168,75,0.1)',border:'1px solid rgba(200,168,75,0.3)',borderRadius:'12px',padding:'12px'}}>
+                  <p style={{fontSize:'13px',color:'#c8a84b',fontWeight:700,margin:'0 0 4px'}}>
+                    Số tiền cọc: {(item.gia * parseInt(orderForm.dat_coc) / 100).toLocaleString('vi-VN')}đ ({orderForm.dat_coc}%)
+                  </p>
+                </div>
+              )}
+            </div>
             <div style={{marginBottom:'16px'}}>
               <label style={{fontSize:'12px',color:'rgba(255,255,255,0.6)',display:'block',marginBottom:'8px'}}>Phương thức thanh toán</label>
               <div style={{display:'flex',gap:'8px'}}>
@@ -247,6 +278,23 @@ function ListingModal({ item, onClose }: { item: any, onClose: () => void }) {
                 ))}
               </div>
             </div>
+            {/* QR chuyen khoan */}
+            {orderForm.phuong_thuc === 'chuyen_khoan' && (
+              <div style={{background:'rgba(255,255,255,0.05)',border:'1px solid rgba(255,255,255,0.1)',borderRadius:'12px',padding:'16px',marginBottom:'12px',textAlign:'center'}}>
+                <p style={{fontSize:'13px',fontWeight:700,marginBottom:'12px',color:'#c8a84b'}}>🏦 Thông tin chuyển khoản</p>
+                {bankInfo.bank_bin && bankInfo.bank_account && (
+                  <img src={`https://img.vietqr.io/image/${bankInfo.bank_bin}-${bankInfo.bank_account}-compact2.png?amount=${orderForm.dat_coc !== '0' ? Math.round(item.gia * parseInt(orderForm.dat_coc) / 100) : item.gia}&addInfo=Dat coc ${item.ten_cay}&accountName=${bankInfo.bank_holder}`}
+                    style={{width:'200px',borderRadius:'12px',margin:'0 auto 12px',display:'block'}} alt="QR" />
+                )}
+                <div style={{textAlign:'left',fontSize:'13px',color:'rgba(255,255,255,0.8)'}}>
+                  <p>🏦 Ngân hàng: <b>{bankInfo.bank_name}</b></p>
+                  <p>💳 Số TK: <b>{bankInfo.bank_account}</b></p>
+                  <p>👤 Chủ TK: <b>{bankInfo.bank_holder}</b></p>
+                  <p>💰 Số tiền: <b style={{color:'#c8a84b'}}>{orderForm.dat_coc !== '0' ? Math.round(item.gia * parseInt(orderForm.dat_coc) / 100).toLocaleString('vi-VN') : item.gia?.toLocaleString('vi-VN')}đ</b></p>
+                  <p>📝 Nội dung: <b>Dat coc {item.ten_cay}</b></p>
+                </div>
+              </div>
+            )}
             <div style={{display:'flex',gap:'8px'}}>
               <button onClick={() => setShowOrder(false)}
                 style={{flex:1,padding:'12px',background:'rgba(255,255,255,0.08)',color:'#fff',border:'none',borderRadius:'12px',cursor:'pointer'}}>

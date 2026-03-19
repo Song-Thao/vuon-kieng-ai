@@ -20,7 +20,7 @@ export default function Admin() {
   const [settings, setSettings] = useState<any>({
     banner_title: '', banner_content: '', banner_image: '', banner_link: '',
     bg_color: '#0e2d1a', bg_image: '', bg_overlay: '0.5', primary_color: '#c8a84b', secondary_color: '#2d6b42',
-    bank_name: '', bank_account: '', bank_holder: '', momo_number: '',
+    bank_name: '', bank_account: '', bank_holder: '', bank_bin: '', momo_number: '',
     listing_fee: '0', commission_percent: '0'
   })
   const [saving, setSaving] = useState(false)
@@ -155,6 +155,26 @@ export default function Admin() {
                       onChange={e => setSettings({ ...settings, [f.key]: e.target.value })} />
                   </div>
                 ))}
+                {/* Bank info */}
+                <div className="border-t pt-4 mt-2">
+                  <p className="text-sm font-semibold text-gray-700 mb-3">💳 Thông tin thanh toán</p>
+                  <div className="space-y-3">
+                    {[
+                      { key: 'bank_name', label: 'Tên ngân hàng', ph: 'Agribank' },
+                      { key: 'bank_account', label: 'Số tài khoản', ph: '7207205286010' },
+                      { key: 'bank_holder', label: 'Tên chủ TK', ph: 'NGUYEN CHI VUNG' },
+                      { key: 'bank_bin', label: 'BIN ngân hàng (VietQR)', ph: '970405' },
+                    ].map(f => (
+                      <div key={f.key}>
+                        <label className="text-xs text-gray-500">{f.label}</label>
+                        <input className="w-full border rounded-lg p-2 mt-1 text-sm"
+                          placeholder={f.ph}
+                          value={settings[f.key] || ''}
+                          onChange={e => setSettings({ ...settings, [f.key]: e.target.value })} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
                 <div>
                   <label className="text-sm text-gray-500">🖼️ Ảnh banner</label>
                   <div className="flex gap-2 mt-1">
