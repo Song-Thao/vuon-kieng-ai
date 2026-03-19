@@ -20,7 +20,7 @@ export default function Home() {
     banner_title:'', banner_content:'', banner_image:'', banner_link:'',
     hero_title:'Vườn Kiểng AI', hero_subtitle:'Chợ bonsai & cây cảnh toàn quốc',
     hero_desc:'AI chẩn đoán bệnh cây · Hộ chiếu điện tử minh bạch · Chợ cây xác thực · Wiki cây cảnh từ cộng đồng',
-    hero_bg_image:'', bg_overlay:'0.5',
+    hero_bg_image:'', bg_overlay:'0.35',
     contact_phone:'', contact_zalo:'', contact_facebook:'', contact_tax:''
   })
 
@@ -177,8 +177,8 @@ export default function Home() {
 
       {/* HERO */}
       <div className="hero-section" style={{paddingTop:'64px'}}>
-        <div style={{position:'absolute',inset:0,backgroundImage:`url('${heroBg}')`,backgroundSize:'cover',backgroundPosition:'center',filter:`brightness(${0.65-overlayOpacity*0.3}) saturate(0.8)`}}/>
-        <div style={{position:'absolute',inset:0,background:`linear-gradient(135deg,rgba(10,31,15,${0.5+overlayOpacity*0.3}) 0%,rgba(10,31,15,${0.1+overlayOpacity*0.2}) 50%,rgba(10,31,15,${0.6+overlayOpacity*0.3}) 100%)`}}/>
+        <div style={{position:'absolute',inset:0,backgroundImage:`url('${heroBg}')`,backgroundSize:'cover',backgroundPosition:'center',filter:`brightness(${0.55-overlayOpacity*0.15}) saturate(0.9)`}}/>
+        <div style={{position:'absolute',inset:0,background:`linear-gradient(135deg,rgba(10,31,15,${0.3+overlayOpacity*0.4}) 0%,rgba(10,31,15,${overlayOpacity*0.15}) 50%,rgba(10,31,15,${0.35+overlayOpacity*0.4}) 100%)`}}/>
         <div className="hero-content">
           <div style={{maxWidth:'1280px',margin:'0 auto',padding:'70px 28px'}}>
             {/* Banner admin */}
@@ -197,7 +197,7 @@ export default function Home() {
               {/* LEFT - Hero text */}
               <div style={{flex:1,minWidth:0}}>
                 <div className="badge ai d1">🌿 Nền tảng cây cảnh số 1 Việt Nam</div>
-                <h1 className="hero-h1 ai d2" style={{fontFamily:"'Playfair Display',serif",fontSize:'clamp(32px,4.5vw,58px)',fontWeight:900,lineHeight:1.1,margin:'8px 0 18px'}}>
+                <h1 className="hero-h1 ai d2" style={{fontFamily:"'Playfair Display',serif",fontSize:'clamp(22px,3vw,42px)',fontWeight:900,lineHeight:1.1,margin:'8px 0 18px'}}>
                   {cfg.hero_title||'Vườn Kiểng AI'}<br/>
                   <span style={{background:'linear-gradient(135deg,#c8a84b,#f0d080)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>
                     {cfg.hero_subtitle||'Chợ bonsai & cây cảnh toàn quốc'}
