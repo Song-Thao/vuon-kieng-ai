@@ -21,6 +21,8 @@ export default function Admin() {
   const [loading, setLoading] = useState(true)
   const [settings, setSettings] = useState<any>({
     banner_title: '', banner_content: '', banner_image: '', banner_link: '',
+    hero_title: 'Vườn Kiểng AI', hero_subtitle: 'Chợ bonsai & cây cảnh toàn quốc', hero_desc: 'AI chẩn đoán bệnh cây · Hộ chiếu điện tử minh bạch · Chợ cây xác thực · Wiki cây cảnh từ cộng đồng', hero_bg_image: '',
+    hero_title: '', hero_subtitle: '', hero_bg_image: '',
     bg_color: '#0e2d1a', bg_image: '', bg_overlay: '0.5', primary_color: '#c8a84b', secondary_color: '#2d6b42',
     bank_name: '', bank_account: '', bank_holder: '', bank_bin: '', momo_number: '',
     listing_fee: '0', commission_percent: '0'
@@ -177,6 +179,24 @@ export default function Admin() {
 
             {/* Banner */}
             <div className="bg-white rounded-2xl p-6 shadow-sm">
+              <h3 className="font-bold text-gray-800 mb-4">🏠 Nội dung Trang Chủ (Hero)</h3>
+              <div className="space-y-3 mb-6 pb-6 border-b">
+                {[
+                  { key: 'hero_title', label: 'Tiêu đề lớn', ph: 'VD: Vườn Kiểng AI' },
+                  { key: 'hero_subtitle', label: 'Tiêu đề phụ (màu vàng)', ph: 'VD: Chợ bonsai & cây cảnh toàn quốc' },
+                  { key: 'hero_desc', label: 'Mô tả ngắn', ph: 'VD: AI chẩn đoán bệnh cây · Hộ chiếu điện tử...' },
+                  { key: 'hero_bg_image', label: '🖼️ Ảnh nền Hero (URL)', ph: 'https://...jpg hoặc để trống dùng ảnh mặc định' },
+                ].map(f => (
+                  <div key={f.key}>
+                    <label className="text-sm text-gray-500">{f.label}</label>
+                    <input className="w-full border rounded-lg p-2 mt-1 text-sm"
+                      placeholder={f.ph}
+                      value={settings[f.key] || ''}
+                      onChange={e => setSettings({ ...settings, [f.key]: e.target.value })} />
+                  </div>
+                ))}
+                {settings.hero_bg_image && <img src={settings.hero_bg_image} className="mt-2 rounded-lg h-24 w-full object-cover" alt="hero preview" />}
+              </div>
               <h3 className="font-bold text-gray-800 mb-4">🖼️ Banner Dashboard</h3>
               <div className="space-y-3">
                 {[
