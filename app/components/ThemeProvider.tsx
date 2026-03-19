@@ -33,7 +33,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   }, [])
 
   const overlay = parseFloat(cfg.bg_overlay || '0.35')
-  const bgImage = cfg.bg_image || cfg.hero_bg_image || ''
+  const bgImage = cfg.hero_bg_image || cfg.bg_image || ''
   const bgColor = cfg.bg_color || '#0a1f0f'
 
   return (
@@ -50,6 +50,10 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
           background: rgba(${hexToRgb(bgColor)}, ${overlay});
           pointer-events: none;
           z-index: 0;
+        }
+        /* Đảm bảo sections không che ảnh nền */
+        section, main, .page-wrapper {
+          background: transparent !important;
         }
         #__next, body > * { position: relative; z-index: 1; }
         :root { --primary: ${cfg.primary_color || '#c8a84b'}; --bg: ${bgColor}; }

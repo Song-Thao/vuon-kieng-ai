@@ -61,13 +61,13 @@ export default function Home() {
   console.log('DEBUG overlay:', cfg.bg_overlay, '→', overlayOpacity)
 
   if (loading) return (
-    <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',background:'#0a1f0f'}}>
+    <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',background:'transparent'}}>
       <div style={{color:'#c8a84b',fontSize:'48px'}}>🌿</div>
     </div>
   )
 
   return (
-    <div style={{minHeight:'100vh',color:'#fff',fontFamily:"'DM Sans',sans-serif",background:'#0a1f0f',overflowX:'hidden'}}>
+    <div style={{minHeight:'100vh',color:'#fff',fontFamily:"'DM Sans',sans-serif",background:'transparent',overflowX:'hidden'}}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@400;500;600&display=swap');
         *{box-sizing:border-box;margin:0;padding:0;}
@@ -316,7 +316,7 @@ export default function Home() {
       )}
 
       {/* CÔNG CỤ - desktop full row */}
-      <div style={{background:'rgba(0,0,0,0.22)',borderTop:'1px solid rgba(255,255,255,0.06)',padding:'56px 28px'}}>
+      <div style={{background:'rgba(0,0,0,0.15)',borderTop:'1px solid rgba(255,255,255,0.06)',padding:'56px 28px'}}>
         <div style={{maxWidth:'1280px',margin:'0 auto'}}>
           <div style={{textAlign:'center',marginBottom:'36px'}}>
             <div className="badge">✨ Tính năng nổi bật</div>
@@ -378,7 +378,7 @@ export default function Home() {
       </div>
 
       {/* FOOTER */}
-      <footer style={{borderTop:'1px solid rgba(255,255,255,0.08)',padding:'48px 28px',background:'rgba(0,0,0,0.35)'}}>
+      <footer style={{borderTop:'1px solid rgba(255,255,255,0.08)',padding:'48px 28px',background:'rgba(0,0,0,0.2)'}}>
         <div style={{maxWidth:'1280px',margin:'0 auto',display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(200px,1fr))',gap:'32px'}}>
           <div>
             <div style={{display:'flex',alignItems:'center',gap:'8px',marginBottom:'14px'}}>
