@@ -20,7 +20,8 @@ export default function Home() {
     banner_title:'', banner_content:'', banner_image:'', banner_link:'',
     hero_title:'Vườn Kiểng AI', hero_subtitle:'Chợ bonsai & cây cảnh toàn quốc',
     hero_desc:'AI chẩn đoán bệnh cây · Hộ chiếu điện tử minh bạch · Chợ cây xác thực · Wiki cây cảnh từ cộng đồng',
-    hero_bg_image:'', bg_overlay:'0.5'
+    hero_bg_image:'', bg_overlay:'0.5',
+    contact_phone:'', contact_zalo:'', contact_facebook:'', contact_tax:''
   })
 
   useEffect(() => {
@@ -400,7 +401,13 @@ export default function Home() {
           <div>
             <div style={{fontWeight:700,marginBottom:'14px',fontSize:'13px',color:'#c8a84b',textTransform:'uppercase' as const,letterSpacing:'1px'}}>Liên hệ</div>
             <div style={{color:'rgba(255,255,255,0.4)',fontSize:'13px',lineHeight:2.2}}>
-              📧 khsongthao00@gmail.com<br/>📍 Cà Mau, Việt Nam<br/>🌐 vuon-kieng-ai.vercel.app
+              📧 khsongthao00@gmail.com<br/>
+              📍 Cà Mau, Việt Nam<br/>
+              🌐 vuon-kieng-ai.vercel.app
+              {cfg.contact_phone && <><br/>📞 {cfg.contact_phone}</>}
+              {cfg.contact_zalo && <><br/>💬 <a href={'https://zalo.me/'+cfg.contact_zalo.replace('https://zalo.me/','')} style={{color:'rgba(255,255,255,0.4)',textDecoration:'none'}}>Zalo: {cfg.contact_zalo}</a></>}
+              {cfg.contact_facebook && <><br/>📘 <a href={cfg.contact_facebook} style={{color:'rgba(255,255,255,0.4)',textDecoration:'none'}}>Facebook</a></>}
+              {cfg.contact_tax && <><br/>🏢 MST: {cfg.contact_tax}</>}
             </div>
           </div>
         </div>

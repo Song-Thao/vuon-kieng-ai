@@ -24,6 +24,7 @@ export default function Admin() {
     hero_title: 'Vườn Kiểng AI', hero_subtitle: 'Chợ bonsai & cây cảnh toàn quốc', hero_desc: 'AI chẩn đoán bệnh cây · Hộ chiếu điện tử minh bạch · Chợ cây xác thực · Wiki cây cảnh từ cộng đồng', hero_bg_image: '',
     bg_color: '#0e2d1a', bg_image: '', bg_overlay: '0.5', primary_color: '#c8a84b', secondary_color: '#2d6b42',
     bank_name: '', bank_account: '', bank_holder: '', bank_bin: '', momo_number: '',
+    contact_phone: '', contact_zalo: '', contact_facebook: '', contact_tax: '',
     listing_fee: '0', commission_percent: '0'
   })
   const [saving, setSaving] = useState(false)
@@ -212,6 +213,25 @@ export default function Admin() {
                   </div>
                 ))}
                 {/* Bank info */}
+                <div className="border-t pt-4 mt-2">
+                  <p className="text-sm font-semibold text-gray-700 mb-3">📞 Thông tin liên hệ</p>
+                  <div className="space-y-3">
+                    {[
+                      { key: 'contact_phone', label: 'Số điện thoại', ph: '0909 123 456' },
+                      { key: 'contact_zalo', label: 'Zalo (số hoặc link)', ph: '0909123456 hoặc https://zalo.me/...' },
+                      { key: 'contact_facebook', label: 'Facebook (link)', ph: 'https://facebook.com/...' },
+                      { key: 'contact_tax', label: 'Mã số thuế / GPKD', ph: 'VD: 2101234567' },
+                    ].map(f => (
+                      <div key={f.key}>
+                        <label className="text-xs text-gray-500">{f.label}</label>
+                        <input className="w-full border rounded-lg p-2 mt-1 text-sm"
+                          placeholder={f.ph}
+                          value={settings[f.key] || ''}
+                          onChange={e => setSettings({ ...settings, [f.key]: e.target.value })} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
                 <div className="border-t pt-4 mt-2">
                   <p className="text-sm font-semibold text-gray-700 mb-3">💳 Thông tin thanh toán</p>
                   <div className="space-y-3">
