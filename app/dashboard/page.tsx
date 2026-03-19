@@ -9,6 +9,7 @@ const supabase = createClient(
 )
 
 const NAV_LINKS = [
+  { label: '🏠 Trang chủ', href: '/' },
   { label: 'Dashboard',  href: '/dashboard' },
   { label: 'Chẩn đoán', href: '/chan-doan' },
   { label: "Chợ cây",   href: "/marketplace" },
